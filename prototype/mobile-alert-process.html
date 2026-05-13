@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>预警办理 - 知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<style>
+body{max-width:375px;margin:0 auto;background:#f5f5f5;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.tab-pill{transition:all .2s;}
+.tab-pill.active{background:#3087CC;color:#fff;}
+.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;}
+.sheet-overlay.show{display:block;}
+.sheet-body{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:375px;background:#fff;border-radius:16px 16px 0 0;padding:16px;z-index:61;transition:transform .3s ease;max-height:85vh;overflow-y:auto;}
+.sheet-body.show{transform:translateX(-50%) translateY(0);}
+.tpl-chip{padding:6px 12px;border:1px solid #E5E7EB;border-radius:999px;font-size:12px;color:#4B5563;background:#F9FAFB;cursor:pointer;}
+.tpl-chip.active{background:#EFF6FF;border-color:#3087CC;color:#3087CC;}
+.check-box{width:18px;height:18px;border:1.5px solid #D1D5DB;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#fff;}
+.check-box.checked{background:#3087CC;border-color:#3087CC;}
+.check-box.checked::after{content:'';width:5px;height:9px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg);margin-bottom:2px;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-row{scrollbar-width:none;-ms-overflow-style:none;}
+</style>
+</head>
+<body class="pb-20">
+
+<div class="bg-white sticky top-0 z-40 border-b border-gray-100">
+  <div class="flex items-center justify-between px-4 py-3">
+    <a href="index.html" class="text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg></a>
+    <h1 class="text-base font-semibold text-gray-800">预警办理</h1>
+    <button onclick="toggleSelectAll()" id="btnSelAll" class="text-sm text-primary">全选</button>
+  </div>
+  <!-- 与预警列表一致的模块 Tab -->
+  <div class="px-4 pb-2 flex items-center gap-2 overflow-x-auto filter-row">
+    <button onclick="pickMod(this,'all')" class="tab-pill active px-3 py-1 rounded-full text-xs whitespace-nowrap">全部 <span id="cntAll">—</span></button>
+    <button onclick="pickMod(this,'late')" class="tab-pill px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">行为 <span id="cntLate">—</span></button>
+    <button onclick="pickMod(this,'study')" class="tab-pill px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">学业 <span id="cntStudy">—</span></button>
+    <button onclick="pickMod(this,'addict')" class="tab-pill px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">心理 <span id="cntAddict">—</span></button>
+    <button onclick="pickMod(this,'consume')" class="tab-pill px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">经济 <span id="cntConsume">—</span></button>
+  </div>
+  <!-- 状态 Tab（同预警列表维度） -->
+  <div class="px-4 pb-2 flex items-center gap-2 overflow-x-auto filter-row">
+    <button onclick="pickStatusTab(this,'all')" data-st="all" class="st-tab px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">全部</button>
+    <button onclick="pickStatusTab(this,'pending')" data-st="pending" class="st-tab px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">待反馈 <span id="stPending">—</span></button>
+    <button onclick="pickStatusTab(this,'done')" data-st="done" class="st-tab px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">已反馈</button>
+    <button onclick="pickStatusTab(this,'false')" data-st="false" class="st-tab px-3 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">误报</button>
+  </div>
+  <!-- 等级 + 类型筛选 -->
+  <div class="px-4 pb-2 flex items-center gap-2">
+    <select id="fLevel" onchange="renderList()" class="flex-1 text-xs border border-gray-200 rounded-lg px-2 py-2 text-gray-700 bg-white">
+      <option value="">全部等级</option>
+      <option value="3">三级</option>
+      <option value="2">二级</option>
+      <option value="1">一级</option>
+    </select>
+    <select id="fType" onchange="renderList()" class="flex-1 text-xs border border-gray-200 rounded-lg px-2 py-2 text-gray-700 bg-white">
+      <option value="">全部类型</option>
+      <option>未归预警</option>
+      <option>晚归预警</option>
+      <option>月消费过低预警</option>
+      <option>心理测评异常预警</option>
+      <option>旷课预警</option>
+    </select>
+  </div>
+  <!-- 模糊搜索：姓名/学号 -->
+  <div class="px-4 pb-3">
+    <div class="relative">
+      <svg class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+      <input id="fKw" oninput="renderList()" type="text" placeholder="搜索学生姓名 / 学号" class="w-full text-xs border border-gray-200 rounded-lg pl-8 pr-8 py-2 text-gray-700 bg-white focus:outline-none focus:border-primary">
+      <button id="fKwClear" onclick="clearKw()" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-[10px] leading-none flex items-center justify-center">×</button>
+    </div>
+  </div>
+</div>
+
+<div class="mx-4 mt-3 space-y-2.5" id="alertList"></div>
+
+<div id="batchBar" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] bg-white border-t border-gray-100 px-4 py-3 flex items-center gap-3 z-40" style="display:none;">
+  <div class="text-xs text-gray-500 flex-shrink-0">已选 <span id="selCount" class="text-primary font-semibold">0</span> 条</div>
+  <button onclick="openFeedbackSheet()" class="flex-1 bg-primary text-white text-sm font-medium py-2.5 rounded-xl">发起反馈</button>
+</div>
+
+<div class="sheet-overlay" id="fbOverlay" onclick="closeSheet()"></div>
+<div class="sheet-body" id="fbSheet">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-base font-semibold text-gray-800">发起反馈</span>
+    <button onclick="closeSheet()" class="text-gray-400 text-xl leading-none">×</button>
+  </div>
+  <div class="text-xs text-gray-500 mb-3">共 <span id="fbCount" class="text-primary font-semibold">0</span> 条预警将按所选结论提交</div>
+
+  <div class="text-xs font-medium text-gray-700 mb-2">办理结论</div>
+  <div class="flex gap-2 mb-3">
+    <button type="button" onclick="setConclusion('normal')" id="cNormal" class="flex-1 py-2 rounded-lg border-2 border-primary bg-primary/5 text-primary text-xs font-medium">正常反馈结案</button>
+    <button type="button" onclick="setConclusion('false')" id="cFalse" class="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 text-xs">系统误报</button>
+  </div>
+
+  <div class="text-xs text-gray-500 mb-2" id="tplLabel">快捷模板</div>
+  <div class="flex flex-wrap gap-2 mb-3" id="tplBox"></div>
+  <textarea id="fbContent" rows="4" placeholder="请填写说明（≥10 字）" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"></textarea>
+  <div class="grid grid-cols-2 gap-3 mt-3">
+    <button onclick="closeSheet()" class="py-2.5 border border-gray-200 text-gray-600 text-sm rounded-xl">取消</button>
+    <button onclick="submitBatch()" class="py-2.5 bg-primary text-white text-sm rounded-xl">提交</button>
+  </div>
+</div>
+
+<script>
+const alerts=[
+  {id:1,name:'张三',sid:'2022010101',mod:'late',type:'未归预警',level:3,time:'2026-04-25 08:30',detail:'连续 2 天未归宿舍',status:'pending',overtime:true},
+  {id:2,name:'王五',sid:'2022010215',mod:'consume',type:'月消费过低预警',level:2,time:'2026-04-25 07:20',detail:'连续 3 天零消费',status:'pending'},
+  {id:3,name:'李明',sid:'2022010312',mod:'late',type:'晚归预警',level:1,time:'2026-04-24 23:30',detail:'23:30 进入南 7-608',status:'pending'},
+  {id:4,name:'马强',sid:'2022010099',mod:'addict',type:'心理测评异常预警',level:2,time:'2026-04-24 19:50',detail:'PHQ-9 得分偏高',status:'pending',overtime:true},
+  {id:5,name:'刘芳',sid:'2023020018',mod:'study',type:'旷课预警',level:2,time:'2026-04-24 09:30',detail:'材料力学连续旷课 3 天',status:'done'},
+  {id:6,name:'赵六',sid:'2023040112',mod:'late',type:'未归预警',level:2,time:'2026-04-23 22:15',detail:'未归预警升级',status:'false'},
+  {id:7,name:'刘琴',sid:'2024050118',mod:'consume',type:'月消费过低预警',level:1,time:'2026-04-23 15:40',detail:'消费骤降',status:'pending'}
+];
+
+const modLabel={late:'行为',study:'学业',addict:'心理',consume:'经济'};
+const modColor={late:'bg-orange-50 text-orange-600',study:'bg-green-50 text-green-700',addict:'bg-purple-50 text-purple-700',consume:'bg-red-50 text-red-600'};
+const lvColor={1:'bg-blue-400',2:'bg-orange-400',3:'bg-red-500'};
+const lvName={1:'一级',2:'二级',3:'三级'};
+
+const tplNormal=['已电话沟通，学生说明情况','已面谈核实，已提醒注意','已联系家长知情','学生已请假（导师证明）'];
+const tplFalse=['数据未同步导致误判','门禁识别错误','一卡通延迟','规则阈值不适用本情况'];
+
+let curMod='all';
+let curSt='pending';
+let selected=new Set();
+let conclusion='normal';
+
+function baseList(){
+  return alerts.filter(a=>{
+    if(curMod!=='all'&&a.mod!==curMod)return false;
+    if(curSt==='all')return true;
+    return a.status===curSt;
+  });
+}
+
+function updateCounts(){
+  document.getElementById('cntAll').textContent=alerts.length;
+  document.getElementById('cntLate').textContent=alerts.filter(a=>a.mod==='late').length;
+  document.getElementById('cntStudy').textContent=alerts.filter(a=>a.mod==='study').length;
+  document.getElementById('cntAddict').textContent=alerts.filter(a=>a.mod==='addict').length;
+  document.getElementById('cntConsume').textContent=alerts.filter(a=>a.mod==='consume').length;
+  document.getElementById('stPending').textContent=alerts.filter(a=>a.status==='pending').length;
+}
+
+function pickStatusTab(btn,st){
+  curSt=st;
+  document.querySelectorAll('.st-tab').forEach(b=>{
+    b.classList.remove('active','bg-primary','text-white');
+    b.classList.add('bg-gray-100','text-gray-600');
+  });
+  btn.classList.add('active','bg-primary','text-white');
+  btn.classList.remove('bg-gray-100','text-gray-600');
+  selected.clear();
+  updateSelUi();
+  renderList();
+}
+
+function clearKw(){const el=document.getElementById('fKw');el.value='';renderList();el.focus();}
+
+function renderList(){
+  const lv=document.getElementById('fLevel').value;
+  const tp=document.getElementById('fType').value;
+  const kw=(document.getElementById('fKw').value||'').trim().toLowerCase();
+  const clearBtn=document.getElementById('fKwClear');
+  if(clearBtn) clearBtn.classList.toggle('hidden',!kw);
+  const list=baseList().filter(a=>{
+    if(lv&&String(a.level)!==lv)return false;
+    if(tp&&a.type!==tp)return false;
+    if(kw&&!(a.name.toLowerCase().includes(kw)||a.sid.includes(kw)))return false;
+    return true;
+  });
+  const box=document.getElementById('alertList');
+  if(!list.length){box.innerHTML='<div class="text-center text-gray-400 text-sm py-10">'+(kw?'未找到匹配「'+kw+'」的预警':'无符合条件的预警')+'</div>';return;}
+  box.innerHTML=list.map(a=>{
+    const checked=selected.has(a.id);
+    const dis=a.status!=='pending'?'opacity-50 pointer-events-none':'';
+    return `<div class="bg-white rounded-xl p-3 shadow-sm flex items-start gap-2 ${dis}">
+      <div class="check-box ${checked?'checked':''} mt-1 ${a.status==='pending'?'':'opacity-40'}" onclick="toggleSel(${a.id},${a.status==='pending'})"></div>
+      <a href="mobile-alert-detail.html?id=${a.id}" class="flex-1 min-w-0">
+        <div class="flex items-start justify-between mb-1">
+          <div class="flex items-center min-w-0">
+            <span class="text-sm font-semibold text-gray-800 truncate">${a.name}</span>
+            <span class="ml-1.5 text-[11px] text-gray-400">${a.sid}</span>
+          </div>
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <span class="px-1.5 py-0.5 rounded text-[10px] text-white ${lvColor[a.level]}">${lvName[a.level]}</span>
+            ${a.overtime?'<span class="px-1.5 py-0.5 rounded text-[10px] bg-red-50 text-red-600 border border-red-100">超时</span>':''}
+            ${a.status==='done'?'<span class="text-[10px] text-green-600">已反馈</span>':a.status==='false'?'<span class="text-[10px] text-gray-500">误报</span>':''}
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="px-1.5 py-0.5 rounded text-[10px] ${modColor[a.mod]}">${modLabel[a.mod]}</span>
+          <span class="text-[12px] font-medium text-gray-700">${a.type}</span>
+        </div>
+        <div class="text-[11px] text-gray-400 mb-1">${a.time}</div>
+        <div class="text-[12px] text-gray-600 leading-snug">${a.detail}</div>
+      </a>
+    </div>`;
+  }).join('');
+}
+
+function pickMod(btn,mod){
+  curMod=mod;
+  document.querySelectorAll('.tab-pill').forEach(b=>{b.classList.remove('active');b.classList.remove('bg-primary','text-white');b.classList.add('bg-gray-100','text-gray-600');});
+  btn.classList.add('active');btn.classList.remove('bg-gray-100','text-gray-600');
+  selected.clear();
+  updateSelUi();
+  renderList();
+}
+
+function toggleSel(id,ok){
+  if(!ok)return;
+  if(selected.has(id))selected.delete(id);
+  else selected.add(id);
+  updateSelUi();renderList();
+}
+
+function updateSelUi(){
+  const count=selected.size;
+  document.getElementById('selCount').textContent=count;
+  document.getElementById('batchBar').style.display=count?'flex':'none';
+  const pend=baseList().filter(a=>a.status==='pending');
+  const ids=pend.map(a=>a.id);
+  const allSel=ids.length&&ids.every(id=>selected.has(id));
+  document.getElementById('btnSelAll').textContent=allSel?'取消全选':'全选';
+}
+
+function toggleSelectAll(){
+  const pend=baseList().filter(a=>a.status==='pending');
+  const ids=pend.map(a=>a.id);
+  const allSel=ids.length&&ids.every(id=>selected.has(id));
+  if(allSel)ids.forEach(id=>selected.delete(id));
+  else ids.forEach(id=>selected.add(id));
+  updateSelUi();renderList();
+}
+
+function setConclusion(kind){
+  conclusion=kind;
+  document.getElementById('cNormal').className=kind==='normal'?'flex-1 py-2 rounded-lg border-2 border-primary bg-primary/5 text-primary text-xs font-medium':'flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 text-xs';
+  document.getElementById('cFalse').className=kind==='false'?'flex-1 py-2 rounded-lg border-2 border-primary bg-primary/5 text-primary text-xs font-medium':'flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 text-xs';
+  document.getElementById('tplLabel').textContent=kind==='false'?'误报原因模板':'处置说明模板';
+  const tpl=kind==='false'?tplFalse:tplNormal;
+  document.getElementById('tplBox').innerHTML=tpl.map(t=>`<span class="tpl-chip" onclick="pickTpl(this)">${t}</span>`).join('');
+  document.getElementById('fbContent').value='';
+  document.getElementById('fbContent').placeholder=kind==='false'?'请说明判定为系统误报的原因（≥10 字）':'请填写反馈说明（≥10 字）';
+}
+
+function pickTpl(el){
+  document.getElementById('fbContent').value=el.textContent;
+  document.querySelectorAll('#tplBox .tpl-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function openFeedbackSheet(){
+  if(!selected.size)return;
+  document.getElementById('fbCount').textContent=selected.size;
+  setConclusion('normal');
+  document.getElementById('fbOverlay').classList.add('show');
+  document.getElementById('fbSheet').classList.add('show');
+}
+
+function closeSheet(){
+  document.getElementById('fbOverlay').classList.remove('show');
+  document.getElementById('fbSheet').classList.remove('show');
+}
+
+function submitBatch(){
+  const content=document.getElementById('fbContent').value.trim();
+  if(content.length<10){alert('说明至少 10 字');return;}
+  const n=selected.size;
+  alert(conclusion==='false'?`已将 ${n} 条预警标记为系统误报`:`已批量反馈 ${n} 条预警`);
+  closeSheet();
+  location.reload();
+}
+
+document.querySelector('[data-st="pending"]').classList.add('active','bg-primary','text-white');
+document.querySelector('[data-st="pending"]').classList.remove('bg-gray-100','text-gray-600');
+updateCounts();
+renderList();
+</script>
+</body>
+</html>

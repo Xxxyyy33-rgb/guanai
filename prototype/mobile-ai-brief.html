@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI今日简报 - 知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<style>
+body{max-width:375px;margin:0 auto;background:#F5F3FF;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.ai-gradient{background:linear-gradient(135deg,#7C3AED 0%,#A78BFA 100%);}
+.card-shadow{box-shadow:0 2px 8px rgba(124,58,237,.06);}
+</style>
+</head>
+<body class="pb-20">
+
+<!-- Header -->
+<div class="ai-gradient px-4 pt-2 pb-6">
+  <div class="flex items-center justify-between text-white/80 text-xs mb-3"><span>9:41</span><div class="flex items-center space-x-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0z"/></svg></div></div>
+  <div class="flex items-center mb-3">
+    <a href="mobile-home.html" class="text-white mr-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></a>
+    <div class="flex-1">
+      <div class="text-white font-semibold text-base">☀️ AI 今日简报</div>
+      <div class="text-white/70 text-xs">2026年4月18日 · 星期六 · AI 已为您梳理</div>
+    </div>
+    <button class="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.506-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg></button>
+  </div>
+</div>
+
+<!-- Summary Card -->
+<div class="mx-4 -mt-4 bg-white rounded-2xl p-4 card-shadow mb-3">
+  <div class="flex items-center mb-2">
+    <div class="w-8 h-8 ai-gradient rounded-full flex items-center justify-center mr-2"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg></div>
+    <span class="text-sm font-semibold text-gray-800">一句话摘要</span>
+  </div>
+  <div class="text-sm text-gray-700 leading-relaxed bg-purple-50 rounded-xl p-3">
+    今日您共有 <strong class="text-purple-700">12</strong> 条待反馈预警（较昨日 +2），其中 <strong class="text-level3">1</strong> 条三级需优先处理；AI 发现 <strong>张三</strong>的风险评分继续升高（+4 分），建议尽快约谈。本周整体反馈率 <strong class="text-green-600">90.6%</strong>，表现优秀 👍。
+  </div>
+</div>
+
+<!-- Quick Numbers -->
+<div class="mx-4 grid grid-cols-3 gap-2 mb-3">
+  <div class="bg-white rounded-2xl p-3 text-center card-shadow">
+    <div class="text-xs text-gray-500">待反馈</div>
+    <div class="text-2xl font-bold text-level3 mt-1">12</div>
+    <div class="text-xs text-orange-500 mt-1">↑ 2</div>
+  </div>
+  <div class="bg-white rounded-2xl p-3 text-center card-shadow">
+    <div class="text-xs text-gray-500">高危学生</div>
+    <div class="text-2xl font-bold text-orange-500 mt-1">3</div>
+    <div class="text-xs text-gray-400 mt-1">其中 1 人新增</div>
+  </div>
+  <div class="bg-white rounded-2xl p-3 text-center card-shadow">
+    <div class="text-xs text-gray-500">反馈率</div>
+    <div class="text-2xl font-bold text-green-600 mt-1">90<span class="text-base">%</span></div>
+    <div class="text-xs text-green-500 mt-1">↑ 4%</div>
+  </div>
+</div>
+
+<!-- Priority 3 -->
+<div class="mx-4 bg-white rounded-2xl p-4 card-shadow mb-3">
+  <div class="flex items-center justify-between mb-3">
+    <div class="text-sm font-semibold text-gray-800">🎯 今日优先处置 Top 3</div>
+    <a href="mobile-alert-process.html" class="text-xs text-purple-600">全部 →</a>
+  </div>
+  <div class="space-y-3">
+    <!-- P1 -->
+    <div class="flex items-start p-3 bg-red-50 rounded-xl">
+      <span class="w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center mr-3 flex-shrink-0">1</span>
+      <div class="flex-1">
+        <div class="flex items-center justify-between"><span class="text-sm font-semibold text-gray-800">张三（2021214301）</span><span class="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">三级</span></div>
+        <div class="text-xs text-gray-600 mt-1">综合风险 <strong class="text-red-600">92 分</strong> · 超 24h 未反馈</div>
+        <div class="text-xs text-purple-600 mt-1 bg-white rounded-lg px-2 py-1 inline-block">💡 AI 建议：立即约谈 → 家长沟通</div>
+      </div>
+    </div>
+    <!-- P2 -->
+    <div class="flex items-start p-3 bg-orange-50 rounded-xl">
+      <span class="w-6 h-6 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center mr-3 flex-shrink-0">2</span>
+      <div class="flex-1">
+        <div class="flex items-center justify-between"><span class="text-sm font-semibold text-gray-800">王五（2022103122）</span><span class="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full">二级</span></div>
+        <div class="text-xs text-gray-600 mt-1">心理风险升高 · 焦虑倾向 2 天</div>
+        <div class="text-xs text-purple-600 mt-1 bg-white rounded-lg px-2 py-1 inline-block">💡 AI 建议：今日宿舍走访</div>
+      </div>
+    </div>
+    <!-- P3 -->
+    <div class="flex items-start p-3 bg-yellow-50 rounded-xl">
+      <span class="w-6 h-6 rounded-full bg-yellow-500 text-white text-xs font-bold flex items-center justify-center mr-3 flex-shrink-0">3</span>
+      <div class="flex-1">
+        <div class="flex items-center justify-between"><span class="text-sm font-semibold text-gray-800">陈晓（2022303201）</span><span class="text-xs bg-yellow-500 text-white px-2 py-0.5 rounded-full">二级</span></div>
+        <div class="text-xs text-gray-600 mt-1">消费异常 · 日均仅 8 元</div>
+        <div class="text-xs text-purple-600 mt-1 bg-white rounded-lg px-2 py-1 inline-block">💡 AI 建议：关怀对话 + 帮扶评估</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Insights -->
+<div class="mx-4 bg-white rounded-2xl p-4 card-shadow mb-3">
+  <div class="text-sm font-semibold text-gray-800 mb-3">🧠 AI 发现</div>
+  <div class="space-y-2">
+    <div class="flex items-start p-3 bg-purple-50 rounded-xl">
+      <span class="text-base mr-2">📈</span>
+      <div class="flex-1 text-sm">
+        <div class="text-gray-800 font-medium">晚归预警集中时间段：22-24 时</div>
+        <div class="text-xs text-gray-500 mt-0.5">较上周均值提前 45 分钟，可能与期中考试临近有关</div>
+      </div>
+    </div>
+    <div class="flex items-start p-3 bg-blue-50 rounded-xl">
+      <span class="text-base mr-2">👥</span>
+      <div class="flex-1 text-sm">
+        <div class="text-gray-800 font-medium">发现 3 名"相似画像"学生</div>
+        <div class="text-xs text-gray-500 mt-0.5">AI 聚类分析出类似张三的早期风险苗头，建议预防性访谈</div>
+      </div>
+    </div>
+    <div class="flex items-start p-3 bg-green-50 rounded-xl">
+      <span class="text-base mr-2">🎉</span>
+      <div class="flex-1 text-sm">
+        <div class="text-gray-800 font-medium">赵某连续 7 天无预警</div>
+        <div class="text-xs text-gray-500 mt-0.5">上月三级预警学生已稳定好转 2 周，可考虑关闭追踪</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Suggested Actions -->
+<div class="mx-4 bg-white rounded-2xl p-4 card-shadow mb-3">
+  <div class="text-sm font-semibold text-gray-800 mb-3">✅ AI 建议的今日任务</div>
+  <div class="space-y-2">
+    <label class="flex items-center p-2.5 hover:bg-gray-50 rounded-lg cursor-pointer">
+      <input type="checkbox" class="w-4 h-4 mr-3 accent-purple-600">
+      <div class="flex-1"><div class="text-sm text-gray-700">9:30 约谈张三（AI 已生成谈话要点）</div><div class="text-xs text-gray-400">预计 30 分钟</div></div>
+      <a href="mobile-ai-chat.html?xh=2021214301" class="text-xs text-purple-600">查看 →</a>
+    </label>
+    <label class="flex items-center p-2.5 hover:bg-gray-50 rounded-lg cursor-pointer">
+      <input type="checkbox" class="w-4 h-4 mr-3 accent-purple-600" checked>
+      <div class="flex-1"><div class="text-sm text-gray-500 line-through">10:00 回复昨日批量预警</div><div class="text-xs text-gray-400">已完成 12 条</div></div>
+    </label>
+    <label class="flex items-center p-2.5 hover:bg-gray-50 rounded-lg cursor-pointer">
+      <input type="checkbox" class="w-4 h-4 mr-3 accent-purple-600">
+      <div class="flex-1"><div class="text-sm text-gray-700">14:00 走访王五宿舍 (南7-608)</div><div class="text-xs text-gray-400">建议搭配心理关怀</div></div>
+    </label>
+    <label class="flex items-center p-2.5 hover:bg-gray-50 rounded-lg cursor-pointer">
+      <input type="checkbox" class="w-4 h-4 mr-3 accent-purple-600">
+      <div class="flex-1"><div class="text-sm text-gray-700">16:30 给陈晓发送关怀短信</div><div class="text-xs text-gray-400">AI 话术已备好</div></div>
+      <a href="mobile-ai-chat.html" class="text-xs text-purple-600">使用 →</a>
+    </label>
+    <label class="flex items-center p-2.5 hover:bg-gray-50 rounded-lg cursor-pointer">
+      <input type="checkbox" class="w-4 h-4 mr-3 accent-purple-600">
+      <div class="flex-1"><div class="text-sm text-gray-700">本周内提交周报</div><div class="text-xs text-gray-400">AI 可 10 秒生成</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- Voice Briefing -->
+<div class="mx-4 ai-gradient rounded-2xl p-4 mb-3 text-white">
+  <div class="flex items-center">
+    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-3"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <div class="flex-1">
+      <div class="font-semibold">🎧 收听语音版简报</div>
+      <div class="text-white/80 text-xs">AI 播报约 2 分钟 · 边刷牙边听</div>
+    </div>
+    <button class="bg-white/20 text-white rounded-full px-3 py-1.5 text-xs">播放</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="mx-4 text-center text-xs text-gray-400 mb-2">本简报由 AI 于 08:00 自动生成 · 数据截至 07:55</div>
+
+<!-- Bottom Nav -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] bg-white border-t border-gray-200 flex items-center justify-around py-1.5 z-50">
+  <a href="mobile-home.html" class="flex flex-col items-center py-1"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg><span class="text-xs text-gray-400 mt-0.5">首页</span></a>
+  <a href="mobile-alert-process.html" class="flex flex-col items-center py-1"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg><span class="text-xs text-gray-400 mt-0.5">办理</span></a>
+  <a href="mobile-students.html" class="flex flex-col items-center py-1"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="text-xs text-gray-400 mt-0.5">学生</span></a>
+  <a href="mobile-workbench.html" class="flex flex-col items-center py-1"><svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg><span class="text-xs text-gray-400 mt-0.5">我的</span></a>
+</nav>
+
+</body>
+</html>

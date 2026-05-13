@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据采集与治理 - 中南大学知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+<aside id="sidebar" class="w-60 bg-primary flex-shrink-0 flex flex-col transition-all duration-300">
+  <div class="brand-block border-b border-white/10">
+    <div class="logo"><img src="assets/ip-mascot.png" alt="鹿小航" class="w-9 h-9 object-contain drop-shadow"></div>
+    <div class="text-block sidebar-text">
+      <div class="name">知行护航工程</div>
+      <div class="sub">CSU · Zhi-Xing Navigation</div>
+    </div>
+  </div>
+  <nav class="flex-1 py-2 overflow-y-auto text-sm">
+    <a href="pc-dashboard.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg><span class="sidebar-text">角色驾驶舱</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">预警管理</div>
+    <a href="pc-alerts.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg><span class="sidebar-text">预警清单</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">数据分析</div>
+    <a href="pc-late-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">行为数据分析</span></a>
+    <a href="pc-study-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">学业数据分析</span></a>
+    <a href="pc-addict-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">心理数据分析</span></a>
+    <a href="pc-consume-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">经济数据分析</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-student.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="sidebar-text">学生画像</span></a>
+    <a href="pc-rules.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg><span class="sidebar-text">预警规则</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-purple-300/80 font-semibold uppercase tracking-wider flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>AI 助手（DeepSeek）</div>
+    <a href="pc-ai-copilot.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="sidebar-text">AI 智能助手</span></a>
+    <a href="pc-ai-report.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25"/></svg><span class="sidebar-text">智能报告生成</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-data.html" class="flex items-center px-4 py-2 text-white bg-white/15 transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg><span class="sidebar-text">数据治理</span></a>
+    <a href="pc-system.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sidebar-text">系统管理</span></a>
+  </nav>
+  <button onclick="toggleSidebar()" class="h-10 flex items-center justify-center text-blue-200 hover:text-white border-t border-white/10 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/></svg></button>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+    <div class="flex items-center text-sm text-gray-500"><a href="index.html" class="hover:text-primary">首页</a><span class="mx-2">/</span><span class="text-gray-800 font-medium">数据采集与治理</span></div>
+    <div class="flex items-center space-x-4"><span class="text-sm text-gray-500">2026-04-15</span><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">张</div></div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <!-- Overview Cards -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2"><span class="text-gray-500 text-sm">数据源总数</span><span class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg></span></div>
+        <div class="text-3xl font-bold text-gray-900">13</div>
+        <div class="text-xs text-gray-400 mt-1">已接入 10 · 待接入 3</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2"><span class="text-gray-500 text-sm">今日同步量</span><span class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5-3L16.5 18m0 0L12 13.5M16.5 18V4.5"/></svg></span></div>
+        <div class="text-3xl font-bold text-gray-900">284K</div>
+        <div class="text-xs text-gray-400 mt-1">较昨日 +5.2%</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2"><span class="text-gray-500 text-sm">异常告警</span><span class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></span></div>
+        <div class="text-3xl font-bold text-red-500">3</div>
+        <div class="text-xs text-gray-400 mt-1">同步失败 1 · 接入异常 2</div>
+      </div>
+    </div>
+
+    <!-- Data Source Cards -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">数据源接入状态</h3>
+      <div class="grid grid-cols-4 gap-4" id="sourceGrid"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div class="border-b border-gray-200 px-4 flex space-x-0">
+        <button onclick="switchTab(this,'tab-sync')" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-primary text-primary whitespace-nowrap">同步监控</button>
+        <button onclick="switchTab(this,'tab-backup')" class="tab-btn px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">数据备份</button>
+      </div>
+
+      <div id="tab-sync" class="tab-panel p-6">
+        <div id="syncChart" style="height:300px" class="mb-4"></div>
+        <table class="w-full text-sm">
+          <thead><tr class="bg-gray-50 text-gray-600"><th class="py-3 px-4 text-left font-medium">数据源</th><th class="py-3 px-4 text-left font-medium">最新同步</th><th class="py-3 px-4 text-left font-medium">同步量</th><th class="py-3 px-4 text-left font-medium">耗时</th><th class="py-3 px-4 text-left font-medium">状态</th><th class="py-3 px-4 text-left font-medium">下次执行</th></tr></thead>
+          <tbody id="syncTable"></tbody>
+        </table>
+      </div>
+
+      <div id="tab-backup" class="tab-panel p-6 hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="font-medium text-gray-700">备份策略与历史</h4>
+          <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm">立即备份</button>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="text-sm font-medium text-gray-700 mb-2">全量备份</div>
+            <div class="text-xs text-gray-500 space-y-1"><div>频率：每周日 02:00</div><div>保留：最近4份</div><div>最近：2026-04-13 02:00</div><div class="text-green-600">状态：成功（12.3GB）</div></div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="text-sm font-medium text-gray-700 mb-2">增量备份</div>
+            <div class="text-xs text-gray-500 space-y-1"><div>频率：每日 03:00</div><div>保留：最近30份</div><div>最近：2026-04-15 03:00</div><div class="text-green-600">状态：成功（856MB）</div></div>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="text-sm font-medium text-gray-700 mb-2">异地备份</div>
+            <div class="text-xs text-gray-500 space-y-1"><div>频率：每周日 04:00</div><div>目标：校级数据中心</div><div>最近：2026-04-13 04:15</div><div class="text-green-600">状态：成功</div></div>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead><tr class="bg-gray-50 text-gray-600"><th class="py-3 px-4 text-left font-medium">备份时间</th><th class="py-3 px-4 text-left font-medium">类型</th><th class="py-3 px-4 text-left font-medium">大小</th><th class="py-3 px-4 text-left font-medium">耗时</th><th class="py-3 px-4 text-left font-medium">状态</th><th class="py-3 px-4 text-left font-medium">操作</th></tr></thead>
+          <tbody>
+            <tr class="border-b border-gray-50"><td class="py-3 px-4 text-gray-600">2026-04-15 03:00</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-600">增量</span></td><td class="py-3 px-4">856MB</td><td class="py-3 px-4">12分钟</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">成功</span></td><td class="py-3 px-4"><button class="text-primary text-sm hover:underline">恢复</button></td></tr>
+            <tr class="border-b border-gray-50"><td class="py-3 px-4 text-gray-600">2026-04-14 03:00</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-600">增量</span></td><td class="py-3 px-4">923MB</td><td class="py-3 px-4">14分钟</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">成功</span></td><td class="py-3 px-4"><button class="text-primary text-sm hover:underline">恢复</button></td></tr>
+            <tr class="border-b border-gray-50"><td class="py-3 px-4 text-gray-600">2026-04-13 02:00</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-green-100 text-green-600">全量</span></td><td class="py-3 px-4">12.3GB</td><td class="py-3 px-4">45分钟</td><td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">成功</span></td><td class="py-3 px-4"><button class="text-primary text-sm hover:underline">恢复</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){const s=document.getElementById('sidebar');s.classList.toggle('w-60');s.classList.toggle('w-16');document.querySelectorAll('.sidebar-text').forEach(el=>el.classList.toggle('hidden'));}
+function switchTab(btn,id){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('border-primary','text-primary');b.classList.add('border-transparent','text-gray-500');});btn.classList.remove('border-transparent','text-gray-500');btn.classList.add('border-primary','text-primary');}
+
+// Data source grid
+(function(){
+  const sources=[
+    {name:'学籍数据',dept:'教务处',status:'online',sync:'实时',count:'52,341',cover:'100%'},
+    {name:'辅导员关系',dept:'学工部',status:'online',sync:'每日',count:'52,341',cover:'100%'},
+    {name:'宿舍分配',dept:'后勤处',status:'online',sync:'每日',count:'48,230',cover:'92.1%'},
+    {name:'宿舍门禁',dept:'保卫处',status:'online',sync:'30分钟',count:'1.2M',cover:'98.5%'},
+    {name:'校门门禁',dept:'保卫处',status:'online',sync:'30分钟',count:'2.4M',cover:'99.1%'},
+    {name:'智能门锁',dept:'后勤处',status:'warning',sync:'1小时',count:'567K',cover:'72.3%'},
+    {name:'课堂考勤',dept:'教务处',status:'online',sync:'2小时',count:'890K',cover:'85.6%'},
+    {name:'Wi-Fi认证',dept:'信息中心',status:'online',sync:'1小时',count:'3.2M',cover:'95.8%'},
+    {name:'校园卡消费',dept:'财务处',status:'online',sync:'30分钟',count:'1.8M',cover:'97.2%'},
+    {name:'成绩数据',dept:'教务处',status:'online',sync:'学期',count:'210K',cover:'100%'},
+    {name:'图书借阅',dept:'图书馆',status:'offline',sync:'待接入',count:'-',cover:'-'},
+    {name:'心理测评',dept:'心理中心',status:'offline',sync:'待接入',count:'-',cover:'-'},
+    {name:'资助数据',dept:'学工部',status:'offline',sync:'待接入',count:'-',cover:'-'},
+  ];
+  const statusMap={online:{dot:'bg-green-500',text:'运行中',bg:'border-green-200'},warning:{dot:'bg-yellow-500',text:'异常',bg:'border-yellow-200'},offline:{dot:'bg-gray-400',text:'待接入',bg:'border-gray-200'}};
+  document.getElementById('sourceGrid').innerHTML=sources.map(s=>{
+    const st=statusMap[s.status];
+    return `<div class="bg-white rounded-xl p-4 shadow-sm border ${st.bg} hover:shadow-md transition">
+      <div class="flex items-center justify-between mb-2"><span class="font-medium text-gray-800 text-sm">${s.name}</span><span class="w-2.5 h-2.5 rounded-full ${st.dot}"></span></div>
+      <div class="text-xs text-gray-500 space-y-1"><div class="flex justify-between"><span>归属</span><span class="text-gray-700">${s.dept}</span></div><div class="flex justify-between"><span>频率</span><span class="text-gray-700">${s.sync}</span></div><div class="flex justify-between"><span>数据量</span><span class="text-gray-700">${s.count}</span></div><div class="flex justify-between"><span>覆盖率</span><span class="${s.cover!=='-'&&parseFloat(s.cover)>=95?'text-green-600':s.cover!=='-'?'text-yellow-600':'text-gray-400'}">${s.cover}</span></div></div>
+    </div>`;
+  }).join('');
+})();
+
+// Sync table
+(function(){
+  const data=[
+    {name:'宿舍门禁',time:'20:00:05',count:'1,234',dur:'8s',status:'success',next:'20:30'},
+    {name:'校门门禁',time:'20:05:12',count:'2,456',dur:'12s',status:'success',next:'20:35'},
+    {name:'校园卡消费',time:'20:00:18',count:'856',dur:'6s',status:'success',next:'20:30'},
+    {name:'Wi-Fi认证',time:'20:00:45',count:'3,210',dur:'15s',status:'success',next:'21:00'},
+    {name:'智能门锁',time:'19:30:22',count:'234',dur:'5s',status:'warning',next:'20:30'},
+    {name:'课堂考勤',time:'18:05:33',count:'890',dur:'10s',status:'success',next:'20:00'},
+  ];
+  const stMap={success:'<span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">成功</span>',warning:'<span class="px-2 py-0.5 rounded-full text-xs bg-yellow-100 text-yellow-700">部分失败</span>',error:'<span class="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-500">失败</span>'};
+  document.getElementById('syncTable').innerHTML=data.map(r=>`<tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 px-4 font-medium">${r.name}</td><td class="py-3 px-4 text-gray-600">${r.time}</td><td class="py-3 px-4 text-gray-600">${r.count}条</td><td class="py-3 px-4 text-gray-600">${r.dur}</td><td class="py-3 px-4">${stMap[r.status]}</td><td class="py-3 px-4 text-gray-600">${r.next}</td></tr>`).join('');
+})();
+
+// Sync chart
+(function(){
+  const c=echarts.init(document.getElementById('syncChart'));
+  const hours=Array.from({length:24},(_,i)=>`${i}:00`);
+  c.setOption({tooltip:{trigger:'axis'},legend:{data:['门禁','消费','Wi-Fi','考勤'],bottom:0,textStyle:{fontSize:11}},grid:{top:10,right:20,bottom:40,left:50},xAxis:{type:'category',data:hours,axisLabel:{fontSize:10}},yAxis:{type:'value',name:'条数',axisLabel:{fontSize:10}},series:[
+    {name:'门禁',type:'bar',stack:'a',data:hours.map(()=>Math.floor(Math.random()*5000+3000)),itemStyle:{color:'#3087CC'},barWidth:12},
+    {name:'消费',type:'bar',stack:'a',data:hours.map(()=>Math.floor(Math.random()*3000+1000)),itemStyle:{color:'#1BB975'}},
+    {name:'Wi-Fi',type:'bar',stack:'a',data:hours.map(()=>Math.floor(Math.random()*8000+2000)),itemStyle:{color:'#722ED1'}},
+    {name:'考勤',type:'bar',stack:'a',data:hours.map((_,i)=>i>=8&&i<=18?Math.floor(Math.random()*2000+500):0),itemStyle:{color:'#F29100'}}
+  ]});
+  window.addEventListener('resize',()=>c.resize());
+})();
+
+</script>
+</body>
+</html>

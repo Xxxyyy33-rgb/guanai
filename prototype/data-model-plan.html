@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中南大学知行护航工程 — 四大护航数据模型实现方案</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<style>
+  body{background:linear-gradient(180deg,#F5F9FE 0%,#EDF4FB 100%);}
+  .doc-section{background:#FFFFFF;border-radius:16px;border:1px solid #E5EDF5;padding:28px 32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(15,76,129,0.04);}
+  .doc-h2{font-size:20px;font-weight:700;color:#0F4C81;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+  .doc-h2 .num{display:inline-flex;width:32px;height:32px;border-radius:10px;background:#0F4C81;color:#fff;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
+  .doc-h3{font-size:15px;font-weight:600;color:#1F3A6E;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+  .doc-h3::before{content:'';width:4px;height:14px;border-radius:2px;background:#3087CC;display:inline-block;}
+  .meta-line{color:#6B7B8E;font-size:13px;margin-bottom:18px;}
+  .module-card{border-radius:14px;border:1px solid;padding:0;overflow:hidden;}
+  .module-head{padding:18px 22px;display:flex;align-items:center;gap:14px;}
+  .module-head .ic{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .module-head .name{font-size:18px;font-weight:700;line-height:1.2;}
+  .module-head .sub{font-size:12px;opacity:.78;margin-top:2px;}
+  .module-body{padding:18px 22px;background:#FFFFFF;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+  .table-clean{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;}
+  .table-clean th{background:#F5F9FE;color:#0F4C81;font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid #DCE7F1;}
+  .table-clean td{padding:10px 12px;border-bottom:1px solid #EEF3F8;color:#1F3A6E;vertical-align:top;}
+  .table-clean tr:last-child td{border-bottom:none;}
+  .lvl1{background:#E5F1FA;color:#0F4C81;}
+  .lvl2{background:#FEF1DF;color:#A05A00;}
+  .lvl3{background:#FCE3E5;color:#A1141C;}
+  .src-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:500;background:#EFF6FC;color:#0F4C81;margin:2px 4px 2px 0;border:1px solid #DCE7F1;}
+  .feat-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:12px;background:#F5F3FF;color:#5B21B6;margin:2px 4px 2px 0;border:1px solid #DDD6FE;}
+  .approve-row{display:flex;align-items:flex-start;gap:14px;padding:12px 14px;border:1px solid #E5EDF5;border-radius:10px;margin-bottom:10px;background:#FAFCFE;}
+  .approve-row .check{flex-shrink:0;margin-top:2px;}
+  .approve-row .body{flex:1;}
+  .approve-row .body .q{font-size:14px;font-weight:600;color:#1F3A6E;}
+  .approve-row .body .d{font-size:12.5px;color:#5A6A7E;margin-top:2px;line-height:1.55;}
+  .approve-row .opts{display:flex;gap:14px;margin-top:8px;font-size:12px;color:#1F3A6E;}
+  .approve-row .opts label{display:flex;align-items:center;gap:5px;cursor:pointer;}
+  .roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .roadmap .ph{position:relative;padding:14px 16px 16px;border-radius:12px;background:#F5F9FE;border:1px solid #DCE7F1;}
+  .roadmap .ph .stage{font-size:11px;font-weight:600;color:#0F4C81;letter-spacing:1px;}
+  .roadmap .ph .title{font-size:14px;font-weight:700;color:#1F3A6E;margin-top:2px;}
+  .roadmap .ph .pts{font-size:12px;color:#5A6A7E;line-height:1.6;margin-top:6px;}
+  .legend-key{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#1F3A6E;margin-right:14px;}
+  .legend-key .dot{width:10px;height:10px;border-radius:3px;}
+  .arch-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:stretch;}
+  .arch-flow .step{position:relative;background:#F5F9FE;border:1px solid #DCE7F1;border-radius:10px;padding:14px 12px;text-align:center;}
+  .arch-flow .step .n{font-size:11px;color:#3087CC;font-weight:600;}
+  .arch-flow .step .t{font-size:13px;font-weight:700;color:#1F3A6E;margin-top:4px;}
+  .arch-flow .step .d{font-size:11px;color:#5A6A7E;margin-top:4px;line-height:1.5;}
+  .arch-flow .step::after{content:'›';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:18px;color:#9DB7CE;font-weight:700;z-index:1;}
+  .arch-flow .step:last-child::after{content:'';}
+  .signoff{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px;}
+  .signoff .col{border-top:1px dashed #9DB7CE;padding-top:8px;}
+  .signoff .col .label{font-size:12px;color:#5A6A7E;}
+  .signoff .col .name{font-size:14px;color:#1F3A6E;margin-top:4px;}
+  @media print{body{background:#FFFFFF;}.no-print{display:none !important;}.doc-section{box-shadow:none;border:1px solid #DDE6EF;page-break-inside:avoid;}}
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-6xl w-full mx-auto p-6">
+
+  <!-- 顶部品牌 Hero -->
+  <div class="zhxh-hero mb-6">
+    <div class="relative z-10 flex items-center gap-6">
+      <div class="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 border border-white/30">
+        <svg class="w-12 h-12" viewBox="0 0 64 64" fill="none">
+          <defs><linearGradient id="dg" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#D6EAF9"/></linearGradient></defs>
+          <path d="M22 14 L18 4 M28 12 L26 2 M42 14 L46 4 M36 12 L38 2" stroke="#FFE0B3" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="18" cy="4" r="2" fill="#FFE0B3"/><circle cx="46" cy="4" r="2" fill="#FFE0B3"/>
+          <ellipse cx="32" cy="36" rx="18" ry="20" fill="url(#dg)"/>
+          <ellipse cx="16" cy="24" rx="5" ry="8" fill="#FFFFFF" transform="rotate(-25 16 24)"/>
+          <ellipse cx="48" cy="24" rx="5" ry="8" fill="#FFFFFF" transform="rotate(25 48 24)"/>
+          <circle cx="25" cy="36" r="2.5" fill="#1F3A6E"/><circle cx="39" cy="36" r="2.5" fill="#1F3A6E"/>
+          <circle cx="26" cy="35" r="0.8" fill="#FFFFFF"/><circle cx="40" cy="35" r="0.8" fill="#FFFFFF"/>
+          <ellipse cx="32" cy="44" rx="2.5" ry="2" fill="#1F3A6E"/>
+          <path d="M30 47 Q32 49 34 47" stroke="#1F3A6E" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <path d="M52 14 Q56 16 56 20" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.6" stroke-linecap="round"/>
+          <path d="M54 12 Q60 14 60 22" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-3 mb-1.5 flex-wrap">
+          <h1 style="font-size:24px;font-weight:700;letter-spacing:1.5px;line-height:1.2;">中南大学 · 知行护航工程</h1>
+          <span class="arch-badge">数据模型实现方案 · v1.0</span>
+        </div>
+        <div class="slogan" style="font-size:14px;letter-spacing:5px;font-weight:500;opacity:0.96;">四大护航 · 数智赋能 · 一生一策</div>
+        <div class="slogan-en" style="font-size:11px;letter-spacing:1.5px;opacity:0.7;margin-top:4px;font-style:italic;">Data Model Implementation Plan · For University Review &amp; Approval</div>
+        <div class="flex items-center gap-3 mt-3 text-[12px]">
+          <span class="domain-badge" style="background:rgba(255,255,255,0.18);color:#FFFFFF;border:1px solid rgba(255,255,255,0.25);">提交方：项目实施组</span>
+          <span class="domain-badge" style="background:rgba(255,255,255,0.18);color:#FFFFFF;border:1px solid rgba(255,255,255,0.25);">汇报对象：学工部 / 信息化办公室 / 心理中心</span>
+          <span class="opacity-80">日期：2026-04-19</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 操作栏 -->
+  <div class="no-print flex items-center justify-between bg-white rounded-xl border border-gray-100 px-5 py-3 mb-5 shadow-sm">
+    <div class="text-sm text-gray-600">本方案用于向校方汇报四大护航模型的<b class="text-primary">规则、阈值、数据源、判定逻辑</b>，并请校方在文末"确认清单"中逐项勾选确认。</div>
+    <div class="flex gap-2">
+      <a href="index.html" class="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">返回首页</a>
+      <button onclick="window.print()" class="px-3 py-1.5 text-xs rounded-lg bg-primary text-white hover:bg-primary-dark">打印 / 导出 PDF</button>
+    </div>
+  </div>
+
+  <!-- 1. 工程总览 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">1</span>工程总览：1 + 4 + N 智慧关爱体系</div>
+    <div class="meta-line">"知行护航工程"以学生为中心，围绕<b>行为、学业、心理、经济</b>四大维度建立预警与关爱模型，统一接入校园数据中台，输出可解释的预警 + 闭环处置流程。</div>
+
+    <div class="grid grid-cols-3 gap-4 mb-5">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div class="text-xs text-primary-dark font-semibold tracking-wide">1 · 一个底座</div>
+        <div class="text-base font-bold text-gray-800 mt-1">学生关爱数据中台</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">统一汇聚 12+ 业务系统数据，建立学生 360° 全景视图与画像基准。</div>
+      </div>
+      <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+        <div class="text-xs font-semibold tracking-wide" style="color:#A05A00;">4 · 四大护航</div>
+        <div class="text-base font-bold text-gray-800 mt-1">行为 / 学业 / 心理 / 经济</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">每条护航：1 个核心模型 + 3 级预警 + N 个闭环处置策略。</div>
+      </div>
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div class="text-xs font-semibold tracking-wide" style="color:#5B21B6;">N · 多场景应用</div>
+        <div class="text-base font-bold text-gray-800 mt-1">AI 助手 + 自动报告 + 干预工作台</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">基于私有化 DeepSeek 输出 AI 报告、约谈话术、干预建议。</div>
+      </div>
+    </div>
+
+    <div class="doc-h3">数据→模型→预警→处置 闭环流程</div>
+    <div class="arch-flow">
+      <div class="step"><div class="n">STEP 1</div><div class="t">数据接入</div><div class="d">12 类业务系统<br>实时/T+1</div></div>
+      <div class="step"><div class="n">STEP 2</div><div class="t">特征工程</div><div class="d">300+ 维特征<br>统一画像</div></div>
+      <div class="step"><div class="n">STEP 3</div><div class="t">模型计算</div><div class="d">规则引擎 + AI<br>每日例行 + 实时</div></div>
+      <div class="step"><div class="n">STEP 4</div><div class="t">三级预警</div><div class="d">黄 / 橙 / 红<br>分级派单</div></div>
+      <div class="step"><div class="n">STEP 5</div><div class="t">闭环处置</div><div class="d">辅导员/咨询师<br>+ AI 助手</div></div>
+      <div class="step"><div class="n">STEP 6</div><div class="t">效果反哺</div><div class="d">干预结果回流<br>持续优化模型</div></div>
+    </div>
+  </div>
+
+  <!-- 2. 四大护航数据模型 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">2</span>四大护航 · 数据模型实现方案</div>
+    <div class="meta-line">每条护航包含：业务定义 → 数据源 → 关键特征 → 模型算法 → 三级阈值 → 输出与派单。<b class="text-primary">所有阈值均为初始建议值，最终以校方审定结果为准。</b></div>
+
+    <!-- 行为护航 -->
+    <div class="module-card hh-behavior-bg hh-behavior-border" style="border-width:1px;border-style:solid;margin-bottom:20px;">
+      <div class="module-head">
+        <div class="ic"><svg class="w-7 h-7" style="color:var(--hh-behavior);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div class="flex-1">
+          <div class="name hh-behavior-text">2.1　行为护航 · 归巢行动</div>
+          <div class="sub hh-behavior-text">通过宿舍门禁 + 智能门锁数据，识别晚归、未归与作息异常，保障在校学生人身安全</div>
+        </div>
+        <span class="pill hh-behavior-text" style="background:rgba(242,145,0,.12);">规则模型 + 时序统计</span>
+      </div>
+      <div class="module-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">数据源</div>
+            <div>
+              <span class="src-tag">宿舍门禁系统</span>
+              <span class="src-tag">宿舍智能门锁</span>
+              <span class="src-tag">校园门禁系统</span>
+              <span class="src-tag">请假/外出审批</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2 leading-5">数据频率：实时（事件流），T+0 入仓，秒级触发预警</div>
+
+            <div class="doc-h3">关键特征（Feature）</div>
+            <div>
+              <span class="feat-tag">本次归寝时间</span>
+              <span class="feat-tag">本周晚归次数</span>
+              <span class="feat-tag">本月晚归次数</span>
+              <span class="feat-tag">本学期晚归累计</span>
+              <span class="feat-tag">连续晚归天数</span>
+              <span class="feat-tag">连续未归天数</span>
+              <span class="feat-tag">归寝时间方差</span>
+              <span class="feat-tag">是否处于排除时段</span>
+            </div>
+          </div>
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">模型与判定逻辑</div>
+            <div class="text-sm text-gray-700 leading-7">
+              <b>晚归判定：</b>当日 <b class="text-orange-600">22:30</b> 之后未刷宿舍门锁/门禁入寝<br>
+              <b>未归判定：</b>当晚至次日 <b class="text-orange-600">06:00</b> 仍无归寝记录<br>
+              <b>排除时段：</b>寒假 / 暑假 / 法定节假日（默认排除），周末（可选）<br>
+              <b>排除身份：</b>休学 / 退学 / 毕业离校 / 校外实习（白名单）
+            </div>
+            <div class="doc-h3">输出与派单</div>
+            <div class="text-sm text-gray-700 leading-7">
+              · 一级 → 辅导员（48h 反馈）<br>
+              · 二级 → 辅导员 + 学院副书记（24h 反馈）<br>
+              · 三级 → 辅导员 + 副书记 + 学院党委书记（12h 反馈，自动通知家长备案）
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-h3">三级阈值规则（建议初始值）</div>
+        <table class="table-clean">
+          <thead><tr><th style="width:90px;">等级</th><th>触发条件</th><th>推送对象</th><th style="width:110px;">反馈时限</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill lvl1">一级 · 黄</span></td><td>单次晚归 22:30 ~ 23:59</td><td>辅导员</td><td>48 小时</td></tr>
+            <tr><td><span class="pill lvl2">二级 · 橙</span></td><td>单次未归 <b>或</b> 连续晚归 ≥ 3 天</td><td>辅导员 + 副书记</td><td>24 小时</td></tr>
+            <tr><td><span class="pill lvl3">三级 · 红</span></td><td>连续未归 ≥ 2 天 <b>或</b> 月累计晚归 ≥ 10 次</td><td>辅导员 + 副书记 + 党委书记</td><td>12 小时</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 学业护航 -->
+    <div class="module-card hh-academic-bg hh-academic-border" style="border-width:1px;border-style:solid;margin-bottom:20px;">
+      <div class="module-head">
+        <div class="ic"><svg class="w-7 h-7" style="color:var(--hh-academic);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg></div>
+        <div class="flex-1">
+          <div class="name hh-academic-text">2.2　学业护航 · 登高计划</div>
+          <div class="sub hh-academic-text">基于课堂考勤、成绩、作业提交等数据，识别学业困难与挂科风险，及时提供学业帮扶</div>
+        </div>
+        <span class="pill hh-academic-text" style="background:rgba(27,185,117,.12);">规则模型 + 梯度提升回归 (GBDT)</span>
+      </div>
+      <div class="module-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">数据源</div>
+            <div>
+              <span class="src-tag">课堂考勤系统</span>
+              <span class="src-tag">教务成绩系统</span>
+              <span class="src-tag">作业 / 实验提交平台</span>
+              <span class="src-tag">期中/期末考试</span>
+              <span class="src-tag">补考重修记录</span>
+              <span class="src-tag">学业咨询记录</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2 leading-5">数据频率：日 (考勤) / 周 (作业) / 学期 (成绩) 增量同步</div>
+
+            <div class="doc-h3">关键特征</div>
+            <div>
+              <span class="feat-tag">周旷课次数</span>
+              <span class="feat-tag">连续旷课天数</span>
+              <span class="feat-tag">月累计缺勤</span>
+              <span class="feat-tag">本学期 GPA</span>
+              <span class="feat-tag">GPA 同期下降幅度</span>
+              <span class="feat-tag">挂科门数</span>
+              <span class="feat-tag">作业完成率</span>
+              <span class="feat-tag">学院/班级排名</span>
+              <span class="feat-tag">期中模拟成绩</span>
+            </div>
+          </div>
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">模型与判定逻辑</div>
+            <div class="text-sm text-gray-700 leading-7">
+              <b>规则部分：</b>对出勤、挂科、GPA 等强相关指标设置硬规则触发<br>
+              <b>AI 部分：</b>引入 GBDT 模型预测"期末挂科概率"，输入 30+ 维历史特征<br>
+              <b>计算频率：</b>出勤日更，成绩 GPA 周更，挂科风险预测周更<br>
+              <b>排除身份：</b>休学复学适应期（白名单 1 学期）
+            </div>
+            <div class="doc-h3">输出与派单</div>
+            <div class="text-sm text-gray-700 leading-7">
+              · 一级 → 辅导员 + 任课教师提示<br>
+              · 二级 → 辅导员 + 学业导师 + 副书记<br>
+              · 三级 → 辅导员 + 学院教学副院长（启动学业帮扶计划，通知家长）
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-h3">三级阈值规则（建议初始值）</div>
+        <table class="table-clean">
+          <thead><tr><th style="width:90px;">等级</th><th>出勤异常</th><th>成绩 / 学业</th><th style="width:140px;">综合判定（满足任一）</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill lvl1">一级 · 黄</span></td><td>周旷课 ≥ 3 次</td><td>单门期中 &lt; 60 分</td><td>挂科风险 &gt; 40%</td></tr>
+            <tr><td><span class="pill lvl2">二级 · 橙</span></td><td>连续旷课 ≥ 3 天 或 周旷课 ≥ 5 次</td><td>挂科 ≥ 2 门 或 GPA 同期下降 ≥ 0.5</td><td>挂科风险 &gt; 65%</td></tr>
+            <tr><td><span class="pill lvl3">三级 · 红</span></td><td>连续旷课 ≥ 5 天 或 周旷课 ≥ 7 次</td><td>挂科 ≥ 3 门 或 排名同期下降 ≥ 30%</td><td>挂科风险 &gt; 85%（满足学业警告条件）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 心理护航 -->
+    <div class="module-card hh-mental-bg hh-mental-border" style="border-width:1px;border-style:solid;margin-bottom:20px;">
+      <div class="module-head">
+        <div class="ic"><svg class="w-7 h-7" style="color:var(--hh-mental);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg></div>
+        <div class="flex-1">
+          <div class="name hh-mental-text">2.3　心理护航 · 晨曦计划</div>
+          <div class="sub hh-mental-text">基于 NLP 语义分析，从校园论坛/邮件/聊天文本中识别抑郁、焦虑、危机倾向，三级预警自动派单至心理咨询师</div>
+        </div>
+        <span class="pill hh-mental-text" style="background:rgba(124,58,237,.12);">NLP 语义模型 + 情感倾向 + 量表评估</span>
+      </div>
+      <div class="module-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">数据源（合规边界内）</div>
+            <div>
+              <span class="src-tag">校园 BBS / 论坛公开帖</span>
+              <span class="src-tag">企业邮箱（@csu.edu.cn）</span>
+              <span class="src-tag">官方聊天 / 工单</span>
+              <span class="src-tag">公开聊天群</span>
+              <span class="src-tag">心理量表 PHQ-9 / GAD-7</span>
+              <span class="src-tag">心理咨询记录</span>
+            </div>
+            <div class="text-xs text-purple-700 mt-2 leading-5"><b>合规说明：</b>仅在校内合法采集范围内、命中关键词后才启用人工复核；不接入个人微信/QQ 私聊；遵循《中南大学学生数据安全管理办法》。</div>
+
+            <div class="doc-h3">关键特征</div>
+            <div>
+              <span class="feat-tag">7 日抑郁词触发频次</span>
+              <span class="feat-tag">7 日焦虑词触发频次</span>
+              <span class="feat-tag">高危词命中次数</span>
+              <span class="feat-tag">情感倾向得分 (-1~1)</span>
+              <span class="feat-tag">PHQ-9 / GAD-7 量表分</span>
+              <span class="feat-tag">关键词共现强度</span>
+              <span class="feat-tag">触发时段集中度</span>
+              <span class="feat-tag">社交隔离度</span>
+            </div>
+          </div>
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">模型与判定逻辑</div>
+            <div class="text-sm text-gray-700 leading-7">
+              <b>NLP 引擎：</b>基于私有化部署 DeepSeek + 心理领域微调词库，对全文做<b>分句 → 关键词匹配 → 情感倾向打分 → 上下文判定</b><br>
+              <b>词库分级：</b>抑郁词 / 焦虑词 / 高危词三类，支持隐喻、反讽场景<br>
+              <b>计算频率：</b>实时流式计算（命中即触发）<br>
+              <b>人工复核：</b>所有命中均由心理中心专员二次确认，避免误伤
+            </div>
+            <div class="doc-h3">输出与派单</div>
+            <div class="text-sm text-gray-700 leading-7">
+              · 一级 → 辅导员（48h 内电话/线下关怀）<br>
+              · 二级 → 心理咨询师 + 辅导员（24h 内 1v1 咨询）<br>
+              · 三级 → <b class="text-red-600">5 分钟内</b>派单：危机干预小组 + 辅导员 + 保卫处，并通知家属
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-h3">三级阈值规则（建议初始值）</div>
+        <table class="table-clean">
+          <thead><tr><th style="width:90px;">等级</th><th>关键词集合（示例）</th><th>触发条件</th><th>派单</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill lvl1">一级 · 黄<br>抑郁倾向</span></td><td>emo / 难受 / 没意思 / 没意义 / 不想 / 撑不下去 / 累 / 失眠</td><td>7 日内 ≥ 3 次</td><td>辅导员（48h）</td></tr>
+            <tr><td><span class="pill lvl2">二级 · 橙<br>焦虑/重度</span></td><td>绝望 / 撑不下去 / 想躲起来 / 无意义 / 焦虑 / 崩溃 / 孤独</td><td>7 日内 ≥ 5 次<br>或 单条多词共现</td><td>心理咨询师 + 辅导员（24h）</td></tr>
+            <tr><td><span class="pill lvl3">三级 · 红<br>危机倾向</span></td><td>想不开 / 解脱 / 跳 / 自杀 / 不想活 / 一了百了 / 遗书</td><td>单次命中即触发<br>（含隐喻 / 反讽）</td><td>危机干预小组 + 辅导员 + 保卫处（5min）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 经济护航 -->
+    <div class="module-card hh-economy-bg hh-economy-border" style="border-width:1px;border-style:solid;margin-bottom:0;">
+      <div class="module-head">
+        <div class="ic"><svg class="w-7 h-7" style="color:var(--hh-economy);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375M21 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        <div class="flex-1">
+          <div class="name hh-economy-text">2.4　经济护航 · 春雨行动</div>
+          <div class="sub hh-economy-text">基于一卡通消费数据，识别隐性贫困与异常消费，做到"主动发现 · 精准帮扶 · 不伤自尊"</div>
+        </div>
+        <span class="pill hh-economy-text" style="background:rgba(223,32,39,.12);">时序异常检测 + 同群对比</span>
+      </div>
+      <div class="module-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">数据源</div>
+            <div>
+              <span class="src-tag">校园一卡通（食堂/超市/水电）</span>
+              <span class="src-tag">奖助学金系统</span>
+              <span class="src-tag">学费缴纳系统</span>
+              <span class="src-tag">勤工助学</span>
+              <span class="src-tag">家庭经济困难认定</span>
+            </div>
+            <div class="text-xs text-gray-500 mt-2 leading-5">数据频率：T+1 同步消费明细，月级别校验奖助/学费</div>
+
+            <div class="doc-h3">关键特征</div>
+            <div>
+              <span class="feat-tag">日均消费金额</span>
+              <span class="feat-tag">近 7 日 vs 前 30 日均值</span>
+              <span class="feat-tag">单笔最大消费</span>
+              <span class="feat-tag">食堂消费天数占比</span>
+              <span class="feat-tag">餐次完整性（早/午/晚）</span>
+              <span class="feat-tag">连续低/零消费天数</span>
+              <span class="feat-tag">同学院同年级中位数对比</span>
+              <span class="feat-tag">奖助 + 勤工补贴情况</span>
+            </div>
+          </div>
+          <div>
+            <div class="doc-h3" style="margin-top:6px;">模型与判定逻辑</div>
+            <div class="text-sm text-gray-700 leading-7">
+              <b>规则部分：</b>消费骤升/骤降/低消费/零消费四类硬规则<br>
+              <b>统计部分：</b>z-score 异常检测 + 同年级同学院消费水位对比<br>
+              <b>计算频率：</b>每日凌晨例行任务（T+1 日报，T+7 周报）<br>
+              <b>排除身份：</b>请假离校 / 校外实习 / 食堂未开放期间
+            </div>
+            <div class="doc-h3">输出与派单</div>
+            <div class="text-sm text-gray-700 leading-7">
+              · 一级 → 辅导员关注（不上门、不主动说明）<br>
+              · 二级 → 辅导员私下沟通 + 提示资助中心<br>
+              · 三级 → 资助中心介入，启动隐性帮扶（餐补/补助）
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-h3">三级阈值规则（建议初始值）</div>
+        <table class="table-clean">
+          <thead><tr><th style="width:90px;">等级</th><th>消费骤降</th><th>低/零消费</th><th>消费骤升</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill lvl1">一级 · 黄</span></td><td>近 7 日 vs 前 30 日 ↓ 30%~50%</td><td>日消费 &lt; ¥10 持续 ≥ 3 天</td><td>日均 ↑ 50%~100%</td></tr>
+            <tr><td><span class="pill lvl2">二级 · 橙</span></td><td>近 7 日 vs 前 30 日 ↓ 50%~80%</td><td>日消费 &lt; ¥10 持续 ≥ 7 天</td><td>日均 ↑ &gt; 100% 或 单笔 &gt; ¥500</td></tr>
+            <tr><td><span class="pill lvl3">三级 · 红</span></td><td>近 7 日 vs 前 30 日 ↓ &gt; 80%</td><td>连续 ≥ 3 天零消费</td><td>单日 &gt; ¥1000 或 单笔 &gt; ¥800</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 通用规则 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">3</span>通用规则与策略</div>
+
+    <div class="doc-h3">3.1　预警自动升级</div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div class="text-sm font-semibold text-primary-dark">一级 → 二级</div>
+        <div class="text-xs text-gray-700 mt-1.5 leading-6">超过 <b>48 小时</b> 未反馈 <b>或</b> 同一类型连续触发 <b>≥ 3 次</b></div>
+      </div>
+      <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+        <div class="text-sm font-semibold" style="color:#A05A00;">二级 → 三级</div>
+        <div class="text-xs text-gray-700 mt-1.5 leading-6">超过 <b>24 小时</b> 未反馈 <b>或</b> 同一类型连续触发 <b>≥ 5 次</b></div>
+      </div>
+    </div>
+    <div class="text-xs text-gray-500 mt-2">催办策略：到达反馈时限 50% 时首次催办，80% 时二次催办（企业微信 + 短信），超时通知上级领导。</div>
+
+    <div class="doc-h3">3.2　白名单机制（避免误伤）</div>
+    <table class="table-clean">
+      <thead><tr><th>类别</th><th>典型场景</th><th>申请人</th><th>有效期</th></tr></thead>
+      <tbody>
+        <tr><td>导师 / 项目类</td><td>实验室赶项目（需导师确认）、竞赛集训</td><td>导师 / 学院</td><td>1 ~ 3 个月，可续期</td></tr>
+        <tr><td>身份类</td><td>休学复学适应期、交换生（出境）、校外实习</td><td>辅导员</td><td>1 学期 / 实习结束</td></tr>
+        <tr><td>医疗类</td><td>住院 / 长期病假 / 心理咨询治疗中</td><td>辅导员 + 校医院</td><td>按康复进度</td></tr>
+      </tbody>
+    </table>
+    <div class="text-xs text-gray-500 mt-2">所有白名单需走"申请 → 学院审批 → 学工部备案"三级审批流程，过期自动失效。</div>
+
+    <div class="doc-h3">3.3　全局排除规则</div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div class="text-sm font-semibold text-gray-700">按学生状态排除</div>
+        <div class="text-xs text-gray-600 mt-1.5">休学 · 退学 · 毕业离校（默认）；交换生（出境）、校外实习（按需勾选）</div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div class="text-sm font-semibold text-gray-700">按时段排除</div>
+        <div class="text-xs text-gray-600 mt-1.5">寒假 · 暑假 · 五一 · 国庆 · 元旦（默认）；周末（行为护航可选排除）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 数据合规 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">4</span>数据合规与隐私保护</div>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">最小必要原则</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">仅采集与预警直接相关的字段；学生个人微信/QQ 私聊一律不接入；无关字段（消费品类细节、聊天人物关系）在脱敏层裁剪。</div>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">分级访问控制</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">辅导员仅可查看本班学生预警；副书记/书记按学院；心理咨询师仅看心理类；学校管理员看汇总指标，不下钻到个人详情。</div>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">操作留痕审计</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">所有学生详情查看、画像查询、规则修改全部留痕，可追溯到人；日志保留 ≥ 3 年；学工部按月抽查。</div>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">私有化部署</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">DeepSeek 大模型本地部署在校内 IDC，文本不出校；与外部任何 API 无连接。</div>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">人工复核机制</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">心理类、危机类预警必须经心理中心专员人工复核后方可推送给辅导员；避免 NLP 误判带来二次伤害。</div>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="text-base font-semibold text-primary-dark">学生知情权</div>
+        <div class="text-xs text-gray-600 mt-2 leading-6">学生可在个人门户查看自身被命中的预警类型、命中次数（不含具体词条原文），并可申诉/申请白名单。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 模型评估指标 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">5</span>模型评估指标（KPI）</div>
+    <table class="table-clean">
+      <thead><tr><th>护航</th><th>核心指标</th><th>目标值</th><th>评估方式</th></tr></thead>
+      <tbody>
+        <tr><td><b class="hh-behavior-text">行为护航</b></td><td>预警精准率 / 漏报率</td><td>精准 ≥ 92% &nbsp; 漏报 &lt; 3%</td><td>抽样人工核验（每月 100 例）</td></tr>
+        <tr><td><b class="hh-academic-text">学业护航</b></td><td>挂科预测 AUC / 召回率</td><td>AUC ≥ 0.85 &nbsp; 召回 ≥ 80%</td><td>学期末成绩回溯验证</td></tr>
+        <tr><td><b class="hh-mental-text">心理护航</b></td><td>关键词识别准确率 / 误报率</td><td>准确 ≥ 88% &nbsp; 误报 &lt; 5%</td><td>心理中心专员双盲复核</td></tr>
+        <tr><td><b class="hh-economy-text">经济护航</b></td><td>主动发现率 / 帮扶接受率</td><td>主动 ≥ 75% &nbsp; 接受 ≥ 60%</td><td>对比已认定贫困库 + 后续跟踪</td></tr>
+        <tr><td colspan="4" style="background:#FFFAEB;color:#A05A00;"><b>整体目标：</b>预警闭环率 ≥ 95%、平均反馈时长 &lt; 24h、年度严重事件同比下降 ≥ 30%。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. 校方确认清单 -->
+  <div class="doc-section" style="border:1px solid #C7D2FE;background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFF 100%);">
+    <div class="doc-h2"><span class="num">6</span>校方确认清单 <span class="text-xs font-normal text-gray-500 ml-3">请逐项勾选确认 / 调整</span></div>
+
+    <div class="doc-h3">6.1　数据源与采集范围</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">确认 4 大护航接入数据源边界</div>
+        <div class="d">行为：宿舍门禁 + 智能门锁；学业：教务/考勤/作业；心理：校园论坛/邮件/官方聊天 + PHQ-9/GAD-7；经济：一卡通 + 奖助学金 + 学费</div>
+        <div class="opts"><label><input type="radio" name="q1">同意以上范围</label><label><input type="radio" name="q1">需要调整（请备注）</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">心理护航：明确"个人微信/QQ 私聊不接入"</div>
+        <div class="d">仅接入校内合法采集场景（论坛/官方邮箱/官方聊天/工单/草稿箱），所有命中由心理中心专员人工复核后再派单。</div>
+        <div class="opts"><label><input type="radio" name="q2">同意</label><label><input type="radio" name="q2">需要调整</label></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">6.2　预警阈值（核心，请重点确认）</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">行为护航 · 晚归判定时间 22:30 / 未归判定 06:00</div>
+        <div class="d">是否调整时间？是否周末同样适用？</div>
+        <div class="opts"><label><input type="radio" name="q3">采用 22:30 / 06:00</label><label><input type="radio" name="q3">调整为 ___ / ___</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">学业护航 · 出勤异常 / 挂科 / GPA 下滑三类阈值</div>
+        <div class="d">三级触发是否对应学校"学业警告"标准？建议三级 = 学业警告。</div>
+        <div class="opts"><label><input type="radio" name="q4">同意</label><label><input type="radio" name="q4">需要调整</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">心理护航 · 三级"高危词"集合及单次命中即触发</div>
+        <div class="d">默认词集：想不开/解脱/跳/自杀/不想活/一了百了/遗书。是否补充其他校内常见隐喻？</div>
+        <div class="opts"><label><input type="radio" name="q5">同意默认词集</label><label><input type="radio" name="q5">需补充：______</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">经济护航 · 隐性贫困识别（"不上门、不主动说明"原则）</div>
+        <div class="d">一二级仅辅导员关注，不约谈不公示；三级才由资助中心通过校内餐补/资助通道隐性补给。</div>
+        <div class="opts"><label><input type="radio" name="q6">同意原则</label><label><input type="radio" name="q6">需调整</label></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">6.3　预警派单与响应时限</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">三级响应时限：行为/学业 12h，心理 5min（危机干预小组）</div>
+        <div class="d">心理三级是否启动校危机干预流程？保卫处是否同步响应？</div>
+        <div class="opts"><label><input type="radio" name="q7">同意</label><label><input type="radio" name="q7">需要调整</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">自动升级规则：未反馈超时升级为更高一级</div>
+        <div class="d">一级 → 二级（48h），二级 → 三级（24h）；催办：50%/80% 时点，企业微信 + 短信。</div>
+        <div class="opts"><label><input type="radio" name="q8">同意</label><label><input type="radio" name="q8">需要调整</label></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">6.4　白名单与排除规则</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">白名单审批流：辅导员申请 → 学院审批 → 学工部备案</div>
+        <div class="d">是否设置最长有效期上限？过期是否自动重审？</div>
+        <div class="opts"><label><input type="radio" name="q9">同意三级审批</label><label><input type="radio" name="q9">需要调整</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">默认排除时段：寒假/暑假/法定节假日</div>
+        <div class="d">周末是否纳入排除？心理护航是否在节假日仍保持开启（建议保持开启）？</div>
+        <div class="opts"><label><input type="radio" name="q10">同意</label><label><input type="radio" name="q10">需要调整</label></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">6.5　数据合规与权限</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">分级访问：辅导员/副书记/书记/咨询师/管理员的数据可见范围</div>
+        <div class="d">学校管理员仅看汇总指标，不下钻到个人原始数据；操作留痕审计 ≥ 3 年。</div>
+        <div class="opts"><label><input type="radio" name="q11">同意</label><label><input type="radio" name="q11">需要调整</label></div>
+      </div>
+    </div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">学生知情权：可在个人门户查看自己被命中的类型与次数</div>
+        <div class="d">不展示具体命中文本原文；提供白名单申诉入口。</div>
+        <div class="opts"><label><input type="radio" name="q12">同意</label><label><input type="radio" name="q12">需要调整</label></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">6.6　模型 KPI 验收标准</div>
+    <div class="approve-row">
+      <input type="checkbox" class="check w-4 h-4 mt-0.5 accent-primary">
+      <div class="body">
+        <div class="q">行为/学业/心理/经济模型的精准率与召回率目标</div>
+        <div class="d">参考 §5：行为精准 ≥ 92%、学业 AUC ≥ 0.85、心理准确 ≥ 88%、经济主动发现 ≥ 75%。</div>
+        <div class="opts"><label><input type="radio" name="q13">同意</label><label><input type="radio" name="q13">需要调整</label></div>
+      </div>
+    </div>
+
+    <!-- 备注与签章 -->
+    <div class="doc-h3 mt-6">校方备注 / 调整意见</div>
+    <textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm h-24" placeholder="请填写需要调整的阈值、数据源、流程等具体意见……"></textarea>
+
+    <div class="signoff">
+      <div class="col"><div class="label">学工部 审批</div><div class="name">　　　　　　（签字 / 盖章）　　　　　　日期：　 / 　 / 　</div></div>
+      <div class="col"><div class="label">心理中心 审批</div><div class="name">　　　　　　（签字 / 盖章）　　　　　　日期：　 / 　 / 　</div></div>
+      <div class="col"><div class="label">信息化办公室 审批</div><div class="name">　　　　　　（签字 / 盖章）　　　　　　日期：　 / 　 / 　</div></div>
+    </div>
+  </div>
+
+  <!-- 7. 实施路线图 -->
+  <div class="doc-section">
+    <div class="doc-h2"><span class="num">7</span>实施路线图（建议）</div>
+    <div class="roadmap">
+      <div class="ph">
+        <div class="stage">PHASE 1 · 第 1~2 月</div>
+        <div class="title">数据中台 + 行为护航</div>
+        <div class="pts">· 12 个业务系统接入<br>· 数据清洗与统一画像<br>· 行为护航上线试运行</div>
+      </div>
+      <div class="ph">
+        <div class="stage">PHASE 2 · 第 3~4 月</div>
+        <div class="title">学业 + 经济护航</div>
+        <div class="pts">· 学业 GBDT 模型训练<br>· 经济异常检测算法<br>· 双系统试运行 1 学期</div>
+      </div>
+      <div class="ph">
+        <div class="stage">PHASE 3 · 第 5~6 月</div>
+        <div class="title">心理护航 + AI 助手</div>
+        <div class="pts">· DeepSeek 私有化部署<br>· NLP 词库 + 量表整合<br>· AI 助手覆盖辅导员</div>
+      </div>
+      <div class="ph">
+        <div class="stage">PHASE 4 · 持续</div>
+        <div class="title">运营优化与回归</div>
+        <div class="pts">· 月度模型回归<br>· 专员人工复核反哺<br>· 季度阈值再校准</div>
+      </div>
+    </div>
+
+    <div class="text-xs text-gray-500 mt-4 leading-6">
+      备注：本方案为初版（v1.0），后续将根据校方反馈、试运行效果与季度回归结果定期更新。如需调整任何阈值、词库或派单流程，可在 §6 备注栏统一反馈，由项目实施组在 5 个工作日内出具修订版。
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-gray-400 mt-2 mb-6">
+    © 2026 中南大学知行护航工程 · 数据模型实现方案 v1.0 · 保密等级：内部使用
+  </div>
+
+</div>
+
+</body>
+</html>
