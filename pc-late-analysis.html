@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行为数据分析 - 中南大学知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+<aside id="sidebar" class="w-60 bg-primary flex-shrink-0 flex flex-col transition-all duration-300">
+  <div class="brand-block border-b border-white/10">
+    <div class="logo"><img src="assets/ip-mascot.png" alt="鹿小航" class="w-9 h-9 object-contain drop-shadow"></div>
+    <div class="text-block sidebar-text"><div class="name">知行护航工程</div><div class="sub">CSU · Zhi-Xing Navigation</div></div>
+  </div>
+  <nav class="flex-1 py-2 overflow-y-auto text-sm">
+    <a href="pc-dashboard.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg><span class="sidebar-text">角色驾驶舱</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">预警管理</div>
+    <a href="pc-alerts.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg><span class="sidebar-text">预警清单</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">数据分析</div>
+    <a href="pc-late-analysis.html" class="flex items-center px-4 py-2 text-white bg-white/15 transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">行为数据分析</span></a>
+    <a href="pc-study-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">学业数据分析</span></a>
+    <a href="pc-addict-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">心理数据分析</span></a>
+    <a href="pc-consume-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">经济数据分析</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-student.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="sidebar-text">学生画像</span></a>
+    <a href="pc-rules.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg><span class="sidebar-text">预警规则</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-purple-300/80 font-semibold uppercase tracking-wider flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>AI 助手（DeepSeek）</div>
+    <a href="pc-ai-copilot.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="sidebar-text">AI 智能助手</span></a>
+    <a href="pc-ai-report.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg><span class="sidebar-text">智能报告生成</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-data.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375"/></svg><span class="sidebar-text">数据治理</span></a>
+    <a href="pc-system.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sidebar-text">系统管理</span></a>
+  </nav>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+    <div class="flex items-center text-sm text-gray-500"><a href="pc-dashboard.html" class="hover:text-primary">角色驾驶舱</a><span class="mx-2">/</span><span>数据分析</span><span class="mx-2">/</span><span class="text-gray-800 font-medium">行为数据</span></div>
+    <div class="flex items-center space-x-4">
+      <span class="text-sm text-gray-500" id="headerTime"></span>
+      <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5"><option>近 30 天</option><option>近 7 天</option><option>本学期</option></select>
+      <button class="px-3 py-1.5 border border-gray-200 text-gray-600 text-xs rounded-lg flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>导出</button>
+      <div class="flex items-center space-x-2"><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">张</div><span class="text-sm text-gray-700">张老师</span></div>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="grid grid-cols-3 gap-3 mb-5">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100"><div class="text-xs text-gray-500 mb-1">本月晚归</div><div class="text-2xl font-bold text-level2">1,486</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100"><div class="text-xs text-gray-500 mb-1">本月未归</div><div class="text-2xl font-bold text-level3">86</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100"><div class="text-xs text-gray-500 mb-1">涉及学生数量</div><div class="text-2xl font-bold text-primary">428</div><div class="text-[11px] text-gray-400 mt-1">本月有晚归或未归的去重人数</div></div>
+    </div>
+
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-5">
+      <div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-gray-800">宿舍归寝刷卡时段（本月）</span><span class="text-xs text-gray-400">22:00–次日 06:00</span></div>
+      <div id="chartDormHour" style="height:260px;"></div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-semibold text-gray-800">需关注学生（门禁推算）</span>
+          <span class="text-xs text-gray-400">晚归 / 未归 / 凌晨归次数偏高</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <select class="text-xs border border-gray-200 rounded-lg px-2 py-1.5"><option>全部学院</option><option>计算机学院</option><option>机电工程学院</option><option>湘雅医学院</option></select>
+          <input type="text" placeholder="姓名 / 学号" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5">
+          <button class="px-3 py-1.5 bg-primary text-white text-xs rounded-lg">批量生成预警</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-gray-500 text-xs">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium">学生</th>
+              <th class="text-left px-3 py-3 font-medium">学号</th>
+              <th class="text-left px-3 py-3 font-medium">学院 · 专业</th>
+              <th class="text-right px-3 py-3 font-medium">晚归次数</th>
+              <th class="text-right px-3 py-3 font-medium">未归天数</th>
+              <th class="text-right px-3 py-3 font-medium">深夜归</th>
+              <th class="text-left px-3 py-3 font-medium">主要异常</th>
+              <th class="text-left px-3 py-3 font-medium">操作</th>
+            </tr>
+          </thead>
+          <tbody id="rowBox" class="divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+document.getElementById('headerTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+
+const majors={'计算机学院':'计算机','材料学院':'材料科学','湘雅医学院':'临床医学','冶金与环境学院':'冶金工程','交通运输工程学院':'交通工程','土木工程学院':'土木工程','机电工程学院':'机械电子','商学院':'工商管理'};
+const ts=[
+  {name:'张文博',sid:'2022010101',college:'计算机学院',late:14,unret:3,deep:8,abn:'夜不归宿 3 天 + 凌晨归 8 次'},
+  {name:'李明',sid:'2022010312',college:'计算机学院',late:11,unret:0,deep:6,abn:'连续晚归 11 次，凌晨 1 点后归寝'},
+  {name:'马强',sid:'2022010099',college:'机电工程学院',late:9,unret:2,deep:5,abn:'未归 2 天 + 离校时长偏长'},
+  {name:'王梓涵',sid:'2024030058',college:'计算机学院',late:13,unret:0,deep:7,abn:'本月 13 次晚归，深夜归 7 次'},
+  {name:'刘嘉怡',sid:'2022040027',college:'机电工程学院',late:10,unret:1,deep:6,abn:'晚归频率超阈值 50%'},
+  {name:'赵晨曦',sid:'2024010012',college:'交通运输工程学院',late:8,unret:2,deep:4,abn:'未归 2 天，深夜归 4 次'},
+  {name:'徐子轩',sid:'2023050026',college:'湘雅医学院',late:12,unret:0,deep:5,abn:'晚归 12 次（22:30~01:30）'},
+  {name:'高岩',sid:'2022040201',college:'冶金与环境学院',late:7,unret:3,deep:3,abn:'夜不归宿 3 天'},
+  {name:'林婧',sid:'2024020055',college:'交通运输工程学院',late:9,unret:1,deep:4,abn:'未归 1 天 + 晚归 9 次'},
+  {name:'郑昊然',sid:'2024010088',college:'商学院',late:11,unret:0,deep:3,abn:'连续晚归 11 次'},
+  {name:'胡瑞',sid:'2022030312',college:'土木工程学院',late:8,unret:1,deep:4,abn:'未归 1 天 + 深夜归'},
+  {name:'孙雨桐',sid:'2024050202',college:'机电工程学院',late:7,unret:2,deep:3,abn:'未归 2 天'},
+  {name:'周可昕',sid:'2022010099',college:'计算机学院',late:9,unret:0,deep:4,abn:'晚归 9 次'},
+  {name:'吴泽楷',sid:'2023040112',college:'湘雅医学院',late:8,unret:1,deep:3,abn:'未归 1 天 + 凌晨归 3 次'},
+  {name:'陈一鸣',sid:'2023040207',college:'土木工程学院',late:7,unret:1,deep:3,abn:'未归 1 天'},
+  {name:'马思琪',sid:'2022030104',college:'材料学院',late:8,unret:0,deep:3,abn:'连续晚归'},
+  {name:'李宇航',sid:'2023020041',college:'材料学院',late:6,unret:1,deep:4,abn:'深夜归 4 次'},
+  {name:'赵文翰',sid:'2023050118',college:'湘雅医学院',late:7,unret:0,deep:3,abn:'晚归 7 次'},
+  {name:'刘静',sid:'2024050118',college:'计算机学院',late:6,unret:1,deep:2,abn:'未归 1 天'},
+  {name:'孙颖',sid:'2024050202',college:'机电工程学院',late:8,unret:0,deep:2,abn:'晚归 8 次'}
+];
+
+function renderRows(){
+  document.getElementById('rowBox').innerHTML=ts.map(s=>`<tr class="hover:bg-orange-50">
+      <td class="px-4 py-3"><div class="flex items-center"><div class="w-7 h-7 rounded-full bg-primary-light text-primary text-xs flex items-center justify-center font-medium mr-2">${s.name.slice(-2)}</div><span class="text-gray-800">${s.name}</span></div></td>
+      <td class="px-3 py-3 text-gray-500 text-xs">${s.sid}</td>
+      <td class="px-3 py-3 text-gray-600 text-xs">${s.college}<br/><span class="text-gray-400">${majors[s.college]||''}</span></td>
+      <td class="px-3 py-3 text-right text-gray-700">${s.late}</td>
+      <td class="px-3 py-3 text-right ${s.unret>0?'text-red-600 font-medium':'text-gray-700'}">${s.unret}</td>
+      <td class="px-3 py-3 text-right text-gray-700">${s.deep}</td>
+      <td class="px-3 py-3 text-gray-600 text-xs max-w-[260px]">${s.abn}</td>
+      <td class="px-3 py-3"><a href="pc-student.html?sid=${s.sid}" class="text-xs text-primary hover:underline mr-2">画像</a><button class="text-xs text-red-500 hover:underline">生成预警</button></td>
+    </tr>`).join('');
+}
+
+function initCharts(){
+  // 宿舍归寝时间分布（22:00–次日 06:00）
+  // 22, 23, 00, 01, 02, 03, 04, 05, 06
+  const dormHrs=['22:00','23:00','00:00','01:00','02:00','03:00','04:00','05:00','06:00'];
+  const dormVal=[2842,1185,486,218,124,62,30,18,42];
+  // 颜色：22:00 蓝色（正常），23:00 黄色（晚归提示），00:00–02:00 橙色（深夜归寝），03:00 后红色（夜不归宿/凌晨归）
+  const dormColors=['#3087CC','#EAB308','#F29100','#F29100','#F29100','#DC2626','#DC2626','#DC2626','#DC2626'];
+  echarts.init(document.getElementById('chartDormHour')).setOption({
+    grid:{left:40,right:20,top:25,bottom:30},
+    tooltip:{trigger:'axis'},
+    xAxis:{type:'category',data:dormHrs,axisLabel:{fontSize:10,color:'#9CA3AF'}},
+    yAxis:{type:'value',axisLabel:{fontSize:10,color:'#9CA3AF'},splitLine:{lineStyle:{color:'#F3F4F6'}}},
+    series:[{type:'bar',data:dormVal.map((v,i)=>({value:v,itemStyle:{color:dormColors[i],borderRadius:[4,4,0,0]}})),label:{show:true,position:'top',fontSize:9,color:'#6B7280'}}]
+  });
+}
+
+renderRows();initCharts();
+</script>
+</body>
+</html>

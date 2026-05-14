@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI智能报告生成 - 中南大学知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>.ai-gradient{background:linear-gradient(135deg,#7C3AED 0%,#A78BFA 100%);}.report-paper{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);}</style>
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-60 bg-primary flex-shrink-0 flex flex-col">
+  <div class="brand-block border-b border-white/10">
+    <div class="logo"><img src="assets/ip-mascot.png" alt="鹿小航" class="w-9 h-9 object-contain drop-shadow"></div>
+    <div class="text-block sidebar-text">
+      <div class="name">知行护航工程</div>
+      <div class="sub">CSU · Zhi-Xing Navigation</div>
+    </div>
+  </div>
+  <nav class="flex-1 py-2 overflow-y-auto text-sm">
+    <a href="pc-dashboard.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg><span class="sidebar-text">角色驾驶舱</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">预警管理</div>
+    <a href="pc-alerts.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg><span class="sidebar-text">预警清单</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">数据分析</div>
+    <a href="pc-late-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">行为数据分析</span></a>
+    <a href="pc-study-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">学业数据分析</span></a>
+    <a href="pc-addict-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">心理数据分析</span></a>
+    <a href="pc-consume-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">经济数据分析</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-student.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="sidebar-text">学生画像</span></a>
+    <a href="pc-rules.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5"/></svg><span class="sidebar-text">预警规则</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-purple-300/80 font-semibold uppercase tracking-wider flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>AI 助手（DeepSeek）</div>
+    <a href="pc-ai-copilot.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="sidebar-text">AI 智能助手</span></a>
+    <a href="pc-ai-report.html" class="flex items-center px-4 py-2 text-white bg-gradient-to-r from-purple-600/30 to-transparent border-l-2 border-purple-300 transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5"/></svg><span class="sidebar-text">智能报告生成</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-data.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375"/></svg><span class="sidebar-text">数据治理</span></a>
+    <a href="pc-system.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sidebar-text">系统管理</span></a>
+  </nav>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+    <div class="flex items-center text-sm text-gray-500"><a href="index.html" class="hover:text-primary">首页</a><span class="mx-2">/</span><span class="text-ai">AI 中心</span><span class="mx-2">/</span><span class="text-gray-800 font-medium">智能报告生成</span></div>
+    <div class="flex items-center space-x-4"><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm">张</div><span class="text-sm text-gray-700">张老师</span></div>
+  </header>
+
+  <main class="flex-1 overflow-hidden flex">
+    <!-- Left: Templates -->
+    <aside class="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div class="p-4 border-b border-gray-100">
+        <div class="text-sm font-semibold text-gray-800 mb-1">📄 报告模板</div>
+        <div class="text-xs text-gray-400">选择模板 → 填写参数 → 一键生成</div>
+      </div>
+      <div class="flex-1 overflow-y-auto p-3 space-y-2">
+        <a href="pc-ai-report.html" class="block border-2 border-purple-400 bg-purple-50 rounded-xl p-4 cursor-pointer">
+          <div class="flex items-center justify-between mb-1"><div class="text-sm font-semibold text-gray-800">🗓️ 辅导员周报</div><span class="text-xs bg-purple-600 text-white px-2 py-0.5 rounded-full">已选</span></div>
+          <div class="text-xs text-gray-500">个人周度工作总结、预警处置、学生动态</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 使用 1,245 次 · 👍 92%</div>
+        </a>
+        <a href="pc-ai-report-monthly.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">📅 辅导员月报</div>
+          <div class="text-xs text-gray-500">月度综合报告 · 含趋势图和同期对比</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 784 次</div>
+        </a>
+        <a href="pc-ai-report-college.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">🏫 学院综合运营报告</div>
+          <div class="text-xs text-gray-500">面向院领导的月度/季度报告</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 312 次</div>
+        </a>
+        <a href="pc-ai-report-annual.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">🎓 校级关爱工作年报</div>
+          <div class="text-xs text-gray-500">全校视角，含各学院横向对比</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 48 次</div>
+        </a>
+        <a href="pc-ai-report-student.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">👤 学生个案分析报告</div>
+          <div class="text-xs text-gray-500">针对单个学生的深度分析</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 526 次</div>
+        </a>
+        <a href="pc-ai-report-model-eval.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">📊 专题模型效果评估</div>
+          <div class="text-xs text-gray-500">评估晚归/学情/心理/经济护航效果</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 96 次</div>
+        </a>
+        <a href="pc-ai-report-emergency.html" class="block border border-gray-200 hover:border-purple-300 rounded-xl p-4 cursor-pointer">
+          <div class="text-sm font-semibold text-gray-800 mb-1">🚨 应急专项报告</div>
+          <div class="text-xs text-gray-500">专项事件的 AI 生成汇报材料</div>
+          <div class="text-xs text-gray-400 mt-2">🔥 23 次</div>
+        </a>
+        <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center text-sm text-gray-500 cursor-pointer hover:border-purple-400 hover:text-purple-600">+ 自定义模板</div>
+      </div>
+    </aside>
+
+    <!-- Center: Config + Preview -->
+    <div class="flex-1 flex flex-col overflow-hidden bg-gray-50">
+      <!-- Config Bar -->
+      <div class="bg-white border-b border-gray-200 p-4 flex items-center gap-3 flex-wrap">
+        <div class="text-sm font-semibold text-gray-800">📝 生成参数：</div>
+        <select class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm"><option>辅导员：张老师</option></select>
+        <select class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm"><option>本周 (04-14 ~ 04-20)</option><option>上周</option><option>自定义区间</option></select>
+        <select class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm"><option>风格：正式公文</option><option>风格：口语汇报</option><option>风格：数据精简</option></select>
+        <select class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm"><option>长度：标准 (1500 字)</option><option>短 (500 字)</option><option>详尽 (3000 字+)</option></select>
+        <button class="ml-auto ai-gradient text-white rounded-lg px-4 py-1.5 text-sm hover:opacity-90">✨ AI 生成报告</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-6">
+        <!-- Loading hint -->
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 mb-4 flex items-center text-sm text-purple-700">
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>
+          报告已生成 · 耗时 4.2 秒 · AI 自动引用 11 项数据 · 已对齐《知行护航工程预警规则清单 V2026.04》
+        </div>
+
+        <!-- Report paper -->
+        <div class="report-paper max-w-[820px] mx-auto rounded-xl p-10">
+          <div class="text-center mb-6">
+            <div class="text-xs text-gray-400 mb-2">中南大学知行护航工程 · 辅导员周报</div>
+            <h1 class="text-2xl font-bold text-gray-900">计算机学院 张老师 · 第 16 周工作周报</h1>
+            <div class="text-sm text-gray-500 mt-2">2026 年 4 月 14 日 — 2026 年 4 月 20 日</div>
+            <div class="w-20 h-1 ai-gradient mx-auto mt-3"></div>
+          </div>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-6 mb-3 border-l-4 border-purple-500 pl-3">一、本周工作概要</h2>
+          <p class="text-sm text-gray-700 leading-7 mb-3">本周累计处置预警 <strong>32 条</strong>（较上周 +3），完成反馈 <strong>29 条</strong>（反馈率 <strong class="text-green-600">90.6%</strong>，超过院均 <strong>+8.3%</strong>）。按四大主题分布：<strong>行为护航</strong> 18 条、<strong>学业护航</strong> 7 条、<strong>心理护航</strong> 3 条、<strong>经济护航</strong> 2 条；另触发 <strong>复合预警</strong> 2 条（学业+心理 / 行为+学业各 1）。共开展约谈 7 次，宿舍走访 2 次，家长沟通 1 次。<mark class="bg-purple-100">整体处置及时、闭环率良好</mark>，但需关注 2 名学生的升级风险。</p>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-6 mb-3 border-l-4 border-purple-500 pl-3">二、关键数据</h2>
+          <div class="grid grid-cols-4 gap-3 mb-4">
+            <div class="border border-gray-200 rounded-lg p-3 text-center"><div class="text-xs text-gray-400">预警总量</div><div class="text-2xl font-bold text-gray-900">32</div><div class="text-xs text-level3">↑3 较上周</div></div>
+            <div class="border border-gray-200 rounded-lg p-3 text-center"><div class="text-xs text-gray-400">反馈率</div><div class="text-2xl font-bold text-green-600">90.6%</div><div class="text-xs text-green-500">↑4.3%</div></div>
+            <div class="border border-gray-200 rounded-lg p-3 text-center"><div class="text-xs text-gray-400">三级（红色）</div><div class="text-2xl font-bold text-level3">2</div><div class="text-xs text-gray-400">持平</div></div>
+            <div class="border border-gray-200 rounded-lg p-3 text-center"><div class="text-xs text-gray-400">约谈次数</div><div class="text-2xl font-bold text-purple-600">7</div><div class="text-xs text-gray-400">↑2</div></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <div class="text-xs text-gray-500 mb-1">五大主题预警分布（本周）</div>
+              <div id="chart1" style="height:220px"></div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-500 mb-1">每日新增 vs 完成反馈</div>
+              <div id="chart2" style="height:220px"></div>
+            </div>
+          </div>
+
+          <p class="text-xs text-gray-500 leading-6 mb-3">📌 行为护航本周触发的 18 条预警中，单次晚归（BH-01）9 条 · 连续晚归（BH-02）4 条 · 夜不归宿（BH-03）3 条 · 频繁未归（BH-06）2 条；学业护航以周课程出勤异常（XY-02）和 GPA 下滑（XY-05）为主；复合预警均已升级至三级，已同步派单至学院副书记 + 心理咨询师。</p>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-6 mb-3 border-l-4 border-purple-500 pl-3">三、重点案例</h2>
+          <div class="bg-red-50 border-l-4 border-red-400 rounded-r-lg p-4 mb-3 text-sm text-gray-700">
+            <strong class="text-red-700">案例 1：张三（2021214301）· 三级 · 复合预警 FH-04</strong>
+            <div class="mt-2">命中规则：<code class="bg-red-100 text-red-700 px-1 rounded text-[11px]">XY-08 学业危机</code> + <code class="bg-red-100 text-red-700 px-1 rounded text-[11px]">XL-04 心理量表中度</code>。GPA 连续两学期下降 1.2，PHQ-9 得分 17；本周已开展 1 次深度约谈，初步了解其长期熬夜原因为网络游戏竞技；已将情况反馈其家长，商定周末家校通话。<strong>下周计划：</strong>结对帮扶 + 心理咨询中心面询 + 宿舍走访 2 次，持续跟踪作息恢复情况。</div>
+          </div>
+          <div class="bg-orange-50 border-l-4 border-orange-400 rounded-r-lg p-4 mb-3 text-sm text-gray-700">
+            <strong class="text-orange-700">案例 2：王五（2022103122）· 二级 → 可能升级 FH-01</strong>
+            <div class="mt-2">命中规则：<code class="bg-orange-100 text-orange-700 px-1 rounded text-[11px]">JJ-02 消费骤降</code> + <code class="bg-orange-100 text-orange-700 px-1 rounded text-[11px]">XL-02 焦虑倾向</code>。近 7 日消费下降 62%，NLP 在邮件中高频捕获"撑不下去 / 焦虑"等词。本周进行一次宿舍走访，发现学生身体疲惫、情绪低落。<strong>下周计划：</strong>联系心理咨询中心安排预约 + 协调资助中心了解家庭情况。</div>
+          </div>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-6 mb-3 border-l-4 border-purple-500 pl-3">四、问题与思考</h2>
+          <ul class="text-sm text-gray-700 leading-7 list-disc pl-5 space-y-1">
+            <li>本周 <strong>行为护航</strong>预警集中在周四、周五，疑与临近期中考试 + 社团纳新叠加有关，建议 <code class="bg-gray-100 text-gray-700 px-1 rounded text-[11px]">BH-05 晚归频率</code> 阈值在重点节点灵活调整</li>
+            <li>心理护航预警呈上升趋势（周环比 +50%），年级内有 <strong>2 名</strong>学生出现苗头，需加强宿舍楼层日间巡查 + 心理咨询中心联动</li>
+            <li>2 条复合预警均与学业压力相关，建议在<strong>预警规则配置</strong>中考虑增加 <code class="bg-gray-100 text-gray-700 px-1 rounded text-[11px]">FH-04 学业+心理</code> 的早期触发条件</li>
+            <li>反馈话术重复率较高，希望 AI 助手能推荐更多情境化模板</li>
+          </ul>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-6 mb-3 border-l-4 border-purple-500 pl-3">五、下周工作计划</h2>
+          <ol class="text-sm text-gray-700 leading-7 list-decimal pl-5 space-y-1">
+            <li>完成张三家长通话、落实结对帮扶（对应 FH-04 处置策略）</li>
+            <li>组织 1 次班级主题班会：自律作息 + 心理调适</li>
+            <li>完成本月反馈记录复盘，提交院系月报</li>
+            <li>参加学校 4 月 25 日关爱工作培训（含 V2026.04 规则解读）</li>
+          </ol>
+
+          <div class="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-400 flex items-center justify-between">
+            <div>📎 引用数据源：预警系统（V2026.04 35 条规则）· 教务（出勤+成绩）· 一卡通 · 宿舍门禁 · NLP 引擎 · 心理量表</div>
+            <div>生成时间：2026-04-18 15:24</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom action bar -->
+      <div class="bg-white border-t border-gray-200 p-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-purple-400">🔄 重新生成</button>
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-purple-400">✏️ 编辑</button>
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-purple-400">📊 更换数据范围</button>
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-purple-400">💬 调整语气</button>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-primary hover:text-primary">📄 导出 Word</button>
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-primary hover:text-primary">📑 导出 PDF</button>
+          <button class="border border-gray-200 text-xs rounded-lg px-3 py-1.5 hover:border-primary hover:text-primary">📧 邮件发送</button>
+          <button class="ai-gradient text-white rounded-lg px-4 py-1.5 text-xs hover:opacity-90">💾 保存到我的报告</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+<script>
+echarts.init(document.getElementById('chart1')).setOption({
+  grid:{top:10,right:10,bottom:20,left:50},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+  xAxis:{type:'value',axisLabel:{fontSize:10}},
+  yAxis:{type:'category',data:['复合预警','经济护航','心理护航','学业护航','行为护航'],axisLabel:{fontSize:10}},
+  series:[{
+    type:'bar',
+    barWidth:14,
+    data:[
+      {value:2,itemStyle:{color:'#7C3AED'}},
+      {value:2,itemStyle:{color:'#DF2027'}},
+      {value:3,itemStyle:{color:'#A78BFA'}},
+      {value:7,itemStyle:{color:'#1BB975'}},
+      {value:18,itemStyle:{color:'#F29100'}}
+    ],
+    label:{show:true,position:'right',fontSize:10,color:'#475569'}
+  }]
+});
+echarts.init(document.getElementById('chart2')).setOption({
+  grid:{top:20,right:10,bottom:30,left:30},
+  legend:{bottom:0,textStyle:{fontSize:10}},
+  tooltip:{trigger:'axis'},
+  xAxis:{type:'category',data:['周一','周二','周三','周四','周五','周六','周日'],axisLabel:{fontSize:10}},
+  yAxis:{type:'value',axisLabel:{fontSize:10}},
+  series:[
+    {name:'新增预警',type:'bar',data:[3,4,5,8,7,3,2],itemStyle:{color:'#A78BFA'}},
+    {name:'完成反馈',type:'bar',data:[2,4,5,7,6,3,2],itemStyle:{color:'#1BB975'}}
+  ]
+});
+</script>
+</body>
+</html>

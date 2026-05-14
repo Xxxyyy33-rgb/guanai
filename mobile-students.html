@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学生 - 知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED',wechat:'#07C160'}}}}</script>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<style>
+body{max-width:375px;margin:0 auto;background:#f5f5f5;min-height:100vh;font-family:'OPPOSans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.tab-line.active{color:#3087CC;border-color:#3087CC;font-weight:600;}
+.tab-line{color:#6B7280;border-bottom:2px solid transparent;}
+</style>
+</head>
+<body class="pb-20">
+
+<!-- Top Bar -->
+<div class="bg-white sticky top-0 z-40 border-b border-gray-100">
+  <div class="flex items-center justify-between px-4 py-3">
+    <h1 class="text-base font-semibold text-gray-800">学生</h1>
+    <a href="javascript:void(0)" onclick="document.getElementById('searchInput').focus()" class="text-gray-500">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+    </a>
+  </div>
+  <!-- Search -->
+  <div class="px-4 pb-2">
+    <div class="bg-gray-100 rounded-lg flex items-center px-3 py-2">
+      <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+      <input id="searchInput" type="text" placeholder="搜索学生姓名 / 学号" oninput="renderList()" class="ml-2 flex-1 bg-transparent text-sm placeholder-gray-400 focus:outline-none">
+    </div>
+  </div>
+  <!-- Tabs -->
+  <div class="flex border-b border-gray-100 px-2">
+    <button onclick="pickTab(this,'focus')" class="tab-line active flex-1 py-2.5 text-sm">重点关注 <span id="cFocus" class="ml-0.5 text-xs">—</span></button>
+    <button onclick="pickTab(this,'alert')" class="tab-line flex-1 py-2.5 text-sm">预警学生 <span id="cAlert" class="ml-0.5 text-xs">—</span></button>
+    <button onclick="pickTab(this,'all')" class="tab-line flex-1 py-2.5 text-sm">全部 <span id="cAll" class="ml-0.5 text-xs">—</span></button>
+  </div>
+  <!-- 学院筛选（仅辅导员/学院默认看到本人/本院；这里展示快捷过滤） -->
+  <div class="px-4 py-2 flex items-center gap-2 overflow-x-auto" style="-ms-overflow-style:none;scrollbar-width:none;">
+    <button onclick="pickCollege(this,'')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-primary text-white">全部学院</button>
+    <button onclick="pickCollege(this,'计算机')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">计算机</button>
+    <button onclick="pickCollege(this,'机电')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">机电</button>
+    <button onclick="pickCollege(this,'土木')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">土木</button>
+    <button onclick="pickCollege(this,'材料')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">材料</button>
+    <button onclick="pickCollege(this,'化工')" class="college-chip px-2.5 py-1 rounded-full text-xs whitespace-nowrap bg-gray-100 text-gray-600">化工</button>
+  </div>
+</div>
+
+<div id="studentList" class="px-4 pt-3 space-y-2"></div>
+
+<!-- Bottom Tab Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] bg-white border-t border-gray-200 flex items-center justify-around py-1.5 z-30">
+  <a href="mobile-home.html" class="flex flex-col items-center py-1">
+    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    <span class="text-xs text-gray-400 mt-0.5">首页</span>
+  </a>
+  <a href="mobile-alert-process.html" class="flex flex-col items-center py-1">
+    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12.75h.75m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+    <span class="text-xs text-gray-400 mt-0.5">办理</span>
+  </a>
+  <a href="mobile-students.html" class="flex flex-col items-center py-1">
+    <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z"/></svg>
+    <span class="text-xs text-primary font-medium mt-0.5">学生</span>
+  </a>
+  <a href="mobile-workbench.html" class="flex flex-col items-center py-1">
+    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+    <span class="text-xs text-gray-400 mt-0.5">我的</span>
+  </a>
+</nav>
+
+<script>
+const students=[
+  {sid:'2022010101',name:'张三',gender:'男',grade:'2022',college:'计算机',major:'计算机科学与技术',clazz:'CS2201',focus:true,alerts:5,top:'未归预警',risk:3,phone:'138****2233'},
+  {sid:'2022010312',name:'李明',gender:'男',grade:'2022',college:'计算机',major:'软件工程',clazz:'SE2202',focus:true,alerts:3,top:'晚归预警',risk:2,phone:'139****5621'},
+  {sid:'2022010099',name:'马强',gender:'男',grade:'2022',college:'机电',major:'机械电子',clazz:'ME2201',focus:true,alerts:4,top:'心理测评异常',risk:3,phone:'137****8843'},
+  {sid:'2023020018',name:'刘芳',gender:'女',grade:'2023',college:'材料',major:'材料科学',clazz:'MS2301',focus:false,alerts:2,top:'旷课预警',risk:2,phone:'186****7712'},
+  {sid:'2023040112',name:'赵六',gender:'男',grade:'2023',college:'土木',major:'土木工程',clazz:'CE2302',focus:true,alerts:3,top:'未归预警',risk:2,phone:'159****0042'},
+  {sid:'2022010215',name:'王五',gender:'男',grade:'2022',college:'化工',major:'应用化学',clazz:'AC2202',focus:false,alerts:2,top:'消费过低预警',risk:2,phone:'185****6688'},
+  {sid:'2024050118',name:'刘琴',gender:'女',grade:'2024',college:'计算机',major:'人工智能',clazz:'AI2401',focus:false,alerts:1,top:'餐补消费异常',risk:1,phone:'157****1129'},
+  {sid:'2024050202',name:'孙颖',gender:'女',grade:'2024',college:'机电',major:'机器人工程',clazz:'RB2402',focus:false,alerts:0,top:'',risk:0,phone:'132****0903'},
+  {sid:'2023040207',name:'陈昊',gender:'男',grade:'2023',college:'土木',major:'工程力学',clazz:'EM2301',focus:false,alerts:0,top:'',risk:0,phone:'138****7765'},
+  {sid:'2022030104',name:'周雯',gender:'女',grade:'2022',college:'材料',major:'高分子',clazz:'PM2202',focus:false,alerts:0,top:'',risk:0,phone:'135****1190'}
+];
+
+const riskColor={1:'bg-blue-50 text-blue-600',2:'bg-orange-50 text-orange-600',3:'bg-red-50 text-red-600'};
+const riskName={1:'低风险',2:'中风险',3:'高风险'};
+
+let curTab='focus';
+let curCollege='';
+
+function updateCounts(){
+  document.getElementById('cFocus').textContent=students.filter(s=>s.focus).length;
+  document.getElementById('cAlert').textContent=students.filter(s=>s.alerts>0).length;
+  document.getElementById('cAll').textContent=students.length;
+}
+
+function pickTab(btn,tab){
+  curTab=tab;
+  document.querySelectorAll('.tab-line').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+function pickCollege(btn,c){
+  curCollege=c;
+  document.querySelectorAll('.college-chip').forEach(b=>{b.classList.remove('bg-primary','text-white');b.classList.add('bg-gray-100','text-gray-600');});
+  btn.classList.add('bg-primary','text-white');btn.classList.remove('bg-gray-100','text-gray-600');
+  renderList();
+}
+
+function renderList(){
+  let list=students.slice();
+  if(curTab==='focus')list=list.filter(s=>s.focus);
+  else if(curTab==='alert')list=list.filter(s=>s.alerts>0);
+  if(curCollege)list=list.filter(s=>s.college===curCollege);
+  const kw=document.getElementById('searchInput').value.trim().toLowerCase();
+  if(kw)list=list.filter(s=>s.name.toLowerCase().includes(kw)||s.sid.includes(kw));
+  const box=document.getElementById('studentList');
+  if(!list.length){box.innerHTML='<div class="text-center text-gray-400 text-sm py-12">暂无符合条件的学生</div>';return;}
+  box.innerHTML=list.map(s=>{
+    const ini=s.name.slice(-2);
+    return `<a href="mobile-search.html?sid=${s.sid}" class="block bg-white rounded-xl p-3 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center font-semibold text-sm flex-shrink-0">${ini}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center min-w-0">
+              <span class="text-sm font-semibold text-gray-800 truncate">${s.name}</span>
+              <span class="ml-1.5 text-[11px] text-gray-400">${s.sid}</span>
+              ${s.focus?'<span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-yellow-50 text-yellow-700 border border-yellow-100">关注</span>':''}
+            </div>
+            ${s.risk?`<span class="px-1.5 py-0.5 rounded text-[10px] ${riskColor[s.risk]} flex-shrink-0">${riskName[s.risk]}</span>`:'<span class="px-1.5 py-0.5 rounded text-[10px] bg-green-50 text-green-600 flex-shrink-0">正常</span>'}
+          </div>
+          <div class="text-[12px] text-gray-500 mt-0.5 truncate">${s.college}学院 · ${s.major} · ${s.clazz}</div>
+          <div class="flex items-center justify-between mt-1">
+            <div class="text-[11px] text-gray-400">
+              ${s.alerts>0?`<span class="text-red-500 font-medium">${s.alerts}</span> 条预警 · 最新「${s.top}」`:'近 30 天无预警'}
+            </div>
+            <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </div>
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+updateCounts();
+renderList();
+</script>
+
+</body>
+</html>

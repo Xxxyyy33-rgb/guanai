@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学业护航预警管理 - 中南大学知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside id="sidebar" class="w-60 bg-primary flex-shrink-0 flex flex-col transition-all duration-300">
+  <div class="brand-block border-b border-white/10">
+    <div class="logo"><img src="assets/ip-mascot.png" alt="鹿小航" class="w-9 h-9 object-contain drop-shadow"></div>
+    <div class="text-block sidebar-text">
+      <div class="name">知行护航工程</div>
+      <div class="sub">CSU · Zhi-Xing Navigation</div>
+    </div>
+  </div>
+  <nav class="flex-1 py-2 overflow-y-auto text-sm">
+    <a href="pc-dashboard.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg><span class="sidebar-text">角色驾驶舱</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">预警管理</div>
+    <a href="pc-alerts.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg><span class="sidebar-text">预警清单</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">数据分析</div>
+    <a href="pc-late-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">行为数据分析</span></a>
+    <a href="pc-study-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">学业数据分析</span></a>
+    <a href="pc-addict-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">心理数据分析</span></a>
+    <a href="pc-consume-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">经济数据分析</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-student.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="sidebar-text">学生画像</span></a>
+    <a href="pc-rules.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg><span class="sidebar-text">预警规则</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-purple-300/80 font-semibold uppercase tracking-wider flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>AI 助手（DeepSeek）</div>
+    <a href="pc-ai-copilot.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="sidebar-text">AI 智能助手</span></a>
+    <a href="pc-ai-report.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg><span class="sidebar-text">智能报告生成</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-data.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg><span class="sidebar-text">数据治理</span></a>
+    <a href="pc-system.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sidebar-text">系统管理</span></a>
+  </nav>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+    <div class="flex items-center text-sm text-gray-500"><a href="pc-dashboard.html" class="hover:text-primary">角色驾驶舱</a><span class="mx-2">/</span><span>预警管理</span><span class="mx-2">/</span><span class="text-gray-800 font-medium">学业护航预警</span></div>
+    <div class="flex items-center space-x-4">
+      <span class="text-sm text-gray-500" id="headerTime"></span>
+      <div class="flex items-center space-x-2"><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">张</div><span class="text-sm text-gray-700">张老师</span></div>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="grid grid-cols-5 gap-4 mb-5">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center"><div class="text-2xl font-bold text-gray-900">134</div><div class="text-xs text-gray-500 mt-1">本月预警总数</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center"><div class="text-2xl font-bold text-level3">8</div><div class="text-xs text-gray-500 mt-1">三级预警</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center"><div class="text-2xl font-bold text-level2">22</div><div class="text-xs text-gray-500 mt-1">二级预警</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center"><div class="text-2xl font-bold text-level1">104</div><div class="text-xs text-gray-500 mt-1">一级预警</div></div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center"><div class="text-2xl font-bold text-green-600">88%</div><div class="text-xs text-gray-500 mt-1">已反馈率</div></div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-5">
+      <div class="flex flex-wrap items-center gap-3">
+        <select class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary">
+          <option value="">全部等级</option><option>三级预警</option><option>二级预警</option><option>一级预警</option>
+        </select>
+        <select class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary">
+          <option value="">全部类型</option><option>挂科预警</option><option>成绩下滑预警</option><option>绩点过低预警</option><option>缺勤预警</option><option>作业未交预警</option>
+        </select>
+        <select class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary">
+          <option value="">全部反馈状态</option><option>未反馈</option><option>已反馈</option><option>系统误报</option>
+        </select>
+        <select class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary">
+          <option value="">全部学院</option><option>计算机学院</option><option>材料学院</option><option>数学与统计学院</option><option>物理与电子学院</option>
+        </select>
+        <input type="date" value="2026-04-16" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary">
+        <input type="text" placeholder="学生姓名 / 学号" class="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 focus:outline-none focus:border-primary w-48">
+        <button class="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark transition flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>查询</button>
+        <button class="ml-auto px-3 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50 transition flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>导出</button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-5">
+      <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-1">
+          <button onclick="switchTab(this,'all')" class="tab-btn active px-4 py-1.5 text-sm rounded-lg">全部 <span class="text-xs opacity-70">134</span></button>
+          <button onclick="switchTab(this,'pending')" class="tab-btn px-4 py-1.5 text-sm rounded-lg">未反馈 <span class="text-xs opacity-70">16</span></button>
+          <button onclick="switchTab(this,'done')" class="tab-btn px-4 py-1.5 text-sm rounded-lg">已反馈 <span class="text-xs opacity-70">114</span></button>
+          <button onclick="switchTab(this,'false')" class="tab-btn px-4 py-1.5 text-sm rounded-lg">系统误报 <span class="text-xs opacity-70">4</span></button>
+        </div>
+        <div class="text-xs text-gray-400">反馈 / 误报标记操作由辅导员在移动端完成</div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-gray-500 text-xs">
+            <tr>
+              <th class="text-left px-5 py-3 font-medium">学生</th>
+              <th class="text-left px-3 py-3 font-medium">学号</th>
+              <th class="text-left px-3 py-3 font-medium">学院 · 专业</th>
+              <th class="text-left px-3 py-3 font-medium">预警类型</th>
+              <th class="text-left px-3 py-3 font-medium">等级</th>
+              <th class="text-left px-3 py-3 font-medium">预警时间</th>
+              <th class="text-left px-3 py-3 font-medium">预警详情</th>
+              <th class="text-left px-3 py-3 font-medium">状态</th>
+              <th class="text-left px-3 py-3 font-medium">辅导员</th>
+              <th class="text-left px-3 py-3 font-medium">操作</th>
+            </tr>
+          </thead>
+          <tbody id="alertTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
+        <div class="text-sm text-gray-500">共 <span class="font-semibold text-gray-700">134</span> 条预警</div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<style>
+.tab-btn{color:#64748b;background:transparent;transition:all .15s;}
+.tab-btn:hover{background:#f1f5f9;color:#1e293b;}
+.tab-btn.active{background:#3087CC;color:#fff;}
+.tab-btn.active .text-xs{opacity:.85;}
+</style>
+
+<script>
+!function(){const now=new Date();document.getElementById('headerTime').textContent=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');}();
+
+const alerts=[
+  {name:'李**',id:'2023020045',college:'数学与统计学院',major:'统计学',type:'挂科预警',level:3,time:'今日 08:30',detail:'上学期已挂科 2 门，本学期期中考试 3 门不及格',status:'pending',counselor:'刘老师'},
+  {name:'王**',id:'2024010023',college:'计算机学院',major:'软件工程',type:'成绩下滑预警',level:2,time:'今日 09:15',detail:'近三次测验均低于 60 分，排名下滑 45 位',status:'pending',counselor:'王老师'},
+  {name:'张**',id:'2024010001',college:'计算机学院',major:'软件工程',type:'缺勤预警',level:2,time:'昨日 14:20',detail:'近两周累计缺勤 8 节课，主要集中在高等数学',status:'done',counselor:'王老师',feedback:'已约谈学生，身体不适导致缺勤，已请假补课'},
+  {name:'赵**',id:'2024020015',college:'数学与统计学院',major:'应用数学',type:'绩点过低预警',level:3,time:'昨日 10:00',detail:'本学期 GPA 仅 1.8，存在留级风险',status:'pending',counselor:'刘老师'},
+  {name:'孙**',id:'2023030078',college:'物理与电子学院',major:'电子信息',type:'作业未交预警',level:1,time:'昨日 16:45',detail:'本周 3 门课未按时提交作业',status:'done',counselor:'郑老师',feedback:'已提醒并协助补交'},
+  {name:'周**',id:'2023040112',college:'材料学院',major:'材料科学',type:'成绩下滑预警',level:1,time:'前日 11:30',detail:'近两次测验成绩低于班级平均 15 分',status:'done',counselor:'陈老师',feedback:'已为学生安排学业伙伴一对一辅导'},
+  {name:'吴**',id:'2024050023',college:'计算机学院',major:'计算机科学',type:'挂科预警',level:2,time:'前日 09:20',detail:'数据结构期中不及格',status:'false',counselor:'王老师',feedback:'教务系统成绩录入错误，实际 72 分，已标记为误报'},
+  {name:'钱**',id:'2024060034',college:'外国语学院',major:'英语',type:'缺勤预警',level:1,time:'3 天前',detail:'本周缺勤 3 节课',status:'done',counselor:'何老师',feedback:'家中有事请假，已补办手续'}
+];
+
+const typeColor={3:'bg-red-100 text-level3',2:'bg-orange-100 text-orange-500',1:'bg-blue-100 text-level1'};
+const typeLabel={3:'三级',2:'二级',1:'一级'};
+const statusColor={pending:'bg-orange-50 text-orange-600 border-orange-200',done:'bg-green-50 text-green-600 border-green-200',false:'bg-gray-100 text-gray-500 border-gray-200'};
+const statusLabel={pending:'未反馈',done:'已反馈',false:'系统误报'};
+
+function render(filter){
+  const list=filter==='all'?alerts:alerts.filter(a=>a.status===filter);
+  document.getElementById('alertTbody').innerHTML=list.map(a=>`
+    <tr class="border-t border-gray-50 hover:bg-gray-50/60">
+      <td class="px-5 py-3"><div class="flex items-center"><div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium text-gray-600 mr-2 flex-shrink-0">${a.name[0]}</div><div class="font-medium text-gray-800">${a.name}</div></div></td>
+      <td class="px-3 py-3 text-gray-500 whitespace-nowrap">${a.id}</td>
+      <td class="px-3 py-3 text-gray-500 whitespace-nowrap">${a.college}<div class="text-[11px] text-gray-400">${a.major}</div></td>
+      <td class="px-3 py-3"><span class="text-gray-700">${a.type}</span></td>
+      <td class="px-3 py-3"><span class="text-xs px-2 py-0.5 rounded-full ${typeColor[a.level]}">${typeLabel[a.level]}</span></td>
+      <td class="px-3 py-3 text-gray-500 whitespace-nowrap text-xs">${a.time}</td>
+      <td class="px-3 py-3 text-gray-500 text-xs max-w-[280px]"><div class="line-clamp-2">${a.detail}</div>${a.feedback?`<div class="mt-1 text-[11px] text-green-600 bg-green-50 rounded px-1.5 py-0.5 inline-block">反馈：${a.feedback}</div>`:''}</td>
+      <td class="px-3 py-3"><span class="text-xs px-2 py-0.5 rounded-full border ${statusColor[a.status]}">${statusLabel[a.status]}</span></td>
+      <td class="px-3 py-3 text-gray-500 whitespace-nowrap">${a.counselor}</td>
+      <td class="px-3 py-3 whitespace-nowrap"><a href="pc-student.html" class="text-primary text-xs hover:underline">查看画像</a></td>
+    </tr>
+  `).join('');
+}
+function switchTab(btn,k){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(k);}
+render('all');
+</script>
+</body>
+</html>

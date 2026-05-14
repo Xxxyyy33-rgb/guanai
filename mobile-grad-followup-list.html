@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>全部记录 - 导学跟进</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<style>
+body{max-width:375px;margin:0 auto;background:#f5f5f5;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.chip{display:inline-flex;align-items:center;padding:6px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:12px;color:#4b5563;background:#fff;cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.chip:active{transform:scale(.96);}
+.chip.active{background:#E3F1F9;border-color:#3087CC;color:#006DAD;font-weight:500;}
+.rec-card{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 2px rgba(0,0,0,.03);border:1px solid #f3f4f6;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-row{scrollbar-width:none;-ms-overflow-style:none;}
+.toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:rgba(17,24,39,.92);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:80;opacity:0;transition:opacity .25s;pointer-events:none;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body class="pb-10">
+
+<!-- Header -->
+<div class="bg-white sticky top-0 z-40 border-b border-gray-100">
+  <div class="flex items-center justify-between px-4 py-3">
+    <a href="mobile-grad-followup.html" class="text-gray-600 active:opacity-60"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg></a>
+    <h1 class="text-base font-semibold text-gray-800">全部记录</h1>
+    <a href="mobile-grad-followup.html" class="text-xs text-primary active:opacity-60">+ 新建</a>
+  </div>
+
+  <!-- 事件类型 Chip 滚动 -->
+  <div class="px-4 pb-2 flex items-center gap-1.5 overflow-x-auto filter-row" id="evChipRow"></div>
+
+  <!-- 搜索 -->
+  <div class="px-4 pb-3">
+    <div class="relative">
+      <svg class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+      <input id="kw" oninput="render()" type="text" placeholder="搜索学生姓名 / 学号 / 备注" class="w-full text-xs border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-gray-700 bg-white focus:outline-none focus:border-primary">
+    </div>
+  </div>
+</div>
+
+<!-- 统计 + 列表 -->
+<div class="px-4 mt-3 space-y-2" id="listBox"></div>
+<div class="text-center text-[11px] text-gray-400 py-4" id="listFoot"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========== 事件类型（与主页保持一致） =========== */
+const EVENTS=[
+  {key:'lab_absent',  name:'实验室缺勤', short:'缺勤实验室', icon:'🧪', color:'#F59E0B', bg:'#FEF3C7'},
+  {key:'meet_absent', name:'组会缺勤',   short:'缺勤组会',   icon:'📋', color:'#F97316', bg:'#FFEDD5'},
+  {key:'advisor_conf',name:'导学矛盾',   short:'导学矛盾',   icon:'⚠️', color:'#DC2626', bg:'#FEE2E2'},
+  {key:'change_advisor',name:'更换导师', short:'更换导师',   icon:'🔄', color:'#7C3AED', bg:'#EDE9FE'},
+  {key:'milestone',   name:'培养任务未按时进行',short:'培养任务',icon:'📅', color:'#0891B2', bg:'#CFFAFE'},
+  {key:'enroll_warn', name:'最后一年未达到毕业要求',short:'未达毕业',icon:'🚨', color:'#B91C1C', bg:'#FEE2E2'}
+];
+
+/* =========== 学生（与主页保持一致） =========== */
+const STUDENTS=[
+  {sid:'2023010001',name:'张明远',major:'计算机科学与技术',advisor:'王老师'},
+  {sid:'2023010002',name:'李思雨',major:'计算机科学与技术',advisor:'王老师'},
+  {sid:'2023010003',name:'王浩然',major:'计算机科学与技术',advisor:'王老师'},
+  {sid:'2023010004',name:'赵雪儿',major:'计算机科学与技术',advisor:'王老师'},
+  {sid:'2022030015',name:'刘文博',major:'软件工程',advisor:'王老师'},
+  {sid:'2022030016',name:'陈嘉怡',major:'软件工程',advisor:'王老师'},
+  {sid:'2024050118',name:'周晨曦',major:'电子信息',advisor:'李老师'},
+  {sid:'2024050119',name:'吴梓涵',major:'电子信息',advisor:'李老师'},
+  {sid:'2022010099',name:'马云鹏',major:'材料工程',advisor:'李老师'},
+  {sid:'2023040112',name:'郑昊然',major:'机械工程',advisor:'李老师'},
+  {sid:'2023040113',name:'胡瑞',    major:'机械工程',advisor:'李老师'},
+  {sid:'2024010088',name:'高一鸣',  major:'交通工程',advisor:'陈老师'},
+  {sid:'2022040201',name:'林婧',    major:'交通工程',advisor:'陈老师'},
+  {sid:'2023050026',name:'徐子轩',  major:'冶金工程',advisor:'陈老师'},
+  {sid:'2024020055',name:'孙雨桐',  major:'土木工程',advisor:'陈老师'}
+];
+
+/* =========== 记录数据（与主页共享 localStorage） =========== */
+const STORE_KEY='gradFollowupRecords';
+const SEED_RECORDS=[
+  {id:'r1',ev:'meet_absent',sids:['2023010001','2023010002'],date:'2026-05-12',note:'上周组会均未到',by:'王老师',ts:Date.now()-2*86400000},
+  {id:'r2',ev:'lab_absent', sids:['2022030015'],            date:'2026-05-11',note:'连续 3 天未到实验室',by:'王老师',ts:Date.now()-3*86400000},
+  {id:'r3',ev:'milestone',  sids:['2023010003'],            date:'2026-05-08',note:'开题答辩延期至 6 月',by:'王老师',ts:Date.now()-6*86400000},
+  {id:'r4',ev:'advisor_conf',sids:['2022030016'],           date:'2026-05-05',note:'调解后仍未改善，已上报学院',by:'王老师',ts:Date.now()-9*86400000},
+  {id:'r5',ev:'lab_absent', sids:['2023010004','2022030015','2023010002'],date:'2026-05-03',note:'本周组会全员到场，仅周一缺勤',by:'王老师',ts:Date.now()-11*86400000},
+  {id:'r6',ev:'enroll_warn',sids:['2022030016'],            date:'2026-04-28',note:'最长年限第 5 年，论文未送审',by:'王老师',ts:Date.now()-16*86400000}
+];
+function loadRecords(){
+  try{const raw=localStorage.getItem(STORE_KEY);if(raw){const arr=JSON.parse(raw);if(Array.isArray(arr))return arr;}}catch(e){}
+  localStorage.setItem(STORE_KEY,JSON.stringify(SEED_RECORDS));
+  return SEED_RECORDS.slice();
+}
+function saveRecords(){localStorage.setItem(STORE_KEY,JSON.stringify(RECORDS));}
+const RECORDS=loadRecords();
+
+let curFilter='all';
+
+/* =========== 渲染：顶部事件 Chip =========== */
+function renderChips(){
+  const row=document.getElementById('evChipRow');
+  const total=RECORDS.length;
+  const counts={};
+  RECORDS.forEach(r=>{counts[r.ev]=(counts[r.ev]||0)+1;});
+  let html=`<button class="chip ${curFilter==='all'?'active':''}" onclick="setFilter('all')">全部 ${total}</button>`;
+  EVENTS.forEach(e=>{
+    const c=counts[e.key]||0;
+    html+=`<button class="chip ${curFilter===e.key?'active':''}" onclick="setFilter('${e.key}')">${e.short} ${c}</button>`;
+  });
+  row.innerHTML=html;
+}
+
+function setFilter(k){curFilter=k;render();}
+
+/* =========== 渲染：记录列表 =========== */
+function render(){
+  renderChips();
+  const kw=(document.getElementById('kw').value||'').trim().toLowerCase();
+  let list=RECORDS.slice().sort((a,b)=>b.ts-a.ts);
+  if(curFilter!=='all'){list=list.filter(r=>r.ev===curFilter);}
+  if(kw){
+    list=list.filter(r=>{
+      if((r.note||'').toLowerCase().includes(kw))return true;
+      return (r.sids||[]).some(sid=>{
+        const s=STUDENTS.find(x=>x.sid===sid);
+        if(!s)return sid.includes(kw);
+        return s.name.toLowerCase().includes(kw)||s.sid.includes(kw);
+      });
+    });
+  }
+  const box=document.getElementById('listBox');
+  const foot=document.getElementById('listFoot');
+  if(!list.length){
+    box.innerHTML='<div class="text-center text-sm text-gray-400 py-16">'+(kw?'未找到匹配的记录':'暂无记录')+'</div>';
+    foot.textContent='';
+    return;
+  }
+  box.innerHTML=list.map(r=>cardHtml(r)).join('');
+  foot.textContent='共 '+list.length+' 条记录';
+}
+
+function cardHtml(r){
+  const ev=EVENTS.find(e=>e.key===r.ev);
+  const stuList=(r.sids||[]).map(s=>{
+    const x=STUDENTS.find(t=>t.sid===s);
+    return x?{name:x.name,sid:x.sid}:{name:s,sid:s};
+  });
+  const stuHtml=stuList.length>3
+    ?stuList.slice(0,3).map(s=>`<span class="text-sm text-gray-800">${s.name}</span><span class="text-[11px] text-gray-400">${s.sid}</span>`).join('<span class="text-gray-300">·</span>')+`<span class="text-[12px] text-gray-500"> 等 ${stuList.length} 人</span>`
+    :stuList.map(s=>`<span class="text-sm text-gray-800">${s.name}</span><span class="text-[11px] text-gray-400">${s.sid}</span>`).join('<span class="text-gray-300">·</span>');
+  return `<div class="rec-card relative">
+    <button onclick="deleteRecord('${r.id}',event)" class="absolute top-2.5 right-2.5 w-7 h-7 flex items-center justify-center rounded-full text-gray-400 active:bg-red-50 active:text-red-500" aria-label="删除">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+    </button>
+    <div class="flex items-center gap-1.5 mb-1.5 pr-8">
+      <span class="w-5 h-5 rounded flex items-center justify-center text-[12px]" style="background:${ev.bg};">${ev.icon}</span>
+      <span class="text-[13px] font-medium" style="color:${ev.color};">${ev.short}</span>
+      <span class="text-[11px] text-gray-400 ml-auto">${r.date}</span>
+    </div>
+    <div class="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 mb-1">${stuHtml}</div>
+    ${r.note?`<div class="text-[12px] text-gray-500 leading-snug">${r.note}</div>`:''}
+    <div class="text-[10px] text-gray-300 mt-1.5">由 ${r.by||'辅导员'} 录入</div>
+  </div>`;
+}
+
+/* =========== 删除 =========== */
+function deleteRecord(id,e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  if(!confirm('确认删除该条记录？删除后无法恢复。'))return;
+  const idx=RECORDS.findIndex(r=>r.id===id);
+  if(idx<0)return;
+  RECORDS.splice(idx,1);
+  saveRecords();
+  render();
+  showToast('已删除');
+}
+
+/* =========== Toast =========== */
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+render();
+</script>
+</body>
+</html>

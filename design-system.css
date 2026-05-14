@@ -1,0 +1,595 @@
+/* ========================================================================
+ * 中南大学学生关爱系统 · 设计体系样式 (基于学工 PC 端 UI 规范)
+ * 主题色 #3087CC · OPPOSans · WCAG AA
+ * 在每个 HTML 页面中通过 <link rel="stylesheet" href="design-system.css"> 引入
+ * ========================================================================
+ */
+
+:root {
+  /* === 主题色板 === */
+  --color-primary: #3087CC;
+  --color-primary-light: #E3F1F9;
+  --color-primary-dark: #006DAD;
+  --color-primary-border: #BADEF3;
+  --color-brand-red: #DF2027;
+
+  /* === 浅蓝阶 === */
+  --color-blue-6: #9CBFDA;
+  --color-blue-7: #B0CEE4;
+  --color-blue-8: #D6EAF9;
+
+  /* === 文字色阶 === */
+  --color-text-primary: #3C444F;     /* 字体黑 */
+  --color-text-secondary: #696F7D;   /* 常规文字 */
+  --color-text-muted: #9096A2;       /* 次要文字 */
+  --color-text-placeholder: #ABB0BA; /* 输入框字 */
+
+  /* === 边框 / 背景 === */
+  --color-border: #C8CAD1;
+  --color-border-light: #E5E7EB;
+  --color-bg-page: #F5F7FA;
+  --color-bg-card: #FFFFFF;
+  --color-bg-disabled: #F1F2F3;
+
+  /* === 状态语义色 === */
+  --color-success: #1BB975;
+  --color-success-bg: #E8FCF4;
+  --color-success-border: #A7F3D0;
+
+  --color-warning: #F29100;
+  --color-warning-bg: #FFF5E5;
+  --color-warning-border: #FFE0B3;
+
+  --color-danger: #DF2027;
+  --color-danger-bg: #FCE8EA;
+  --color-danger-border: #F6BCBE;
+
+  --color-info: #3087CC;
+  --color-info-bg: #E3F1F9;
+  --color-info-border: #BADEF3;
+
+  /* === AI 紫 (AI 中心专用) === */
+  --color-ai: #7C3AED;
+  --color-ai-light: #A78BFA;
+  --color-ai-bg: #F5F3FF;
+
+  /* === 间距 === */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-xxl: 24px;
+
+  /* === 圆角 === */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 20px;
+  --radius-full: 9999px;
+
+  /* === 阴影 === */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 8px rgba(48, 135, 204, 0.06);
+  --shadow-lg: 0 4px 12px rgba(48, 135, 204, 0.10);
+  --shadow-card-hover: 0 6px 16px rgba(48, 135, 204, 0.12);
+
+  /* === 字体 === */
+  --font-family: 'OPPOSans', -apple-system, BlinkMacSystemFont,
+    'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+
+  /* === 布局 === */
+  --header-height: 56px;
+  --sidebar-width: 240px;
+  --table-header-bg: #E3F1F9;
+  --table-row-height: 48px;
+
+  /* === 过渡 === */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease-in-out;
+  --transition-slow: 300ms ease;
+}
+
+/* ========================================================================
+ * 全局基础
+ * ======================================================================== */
+
+html, body {
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg-page);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* 链接默认样式 */
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { color: var(--color-primary-dark); }
+
+/* 选中文本 */
+::selection {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+/* 滚动条 (Webkit) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: #D9DCE2; border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-blue-6); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ========================================================================
+ * 侧边栏 (sidebar) - 深蓝渐变 + 主题色高亮
+ * ======================================================================== */
+
+aside#sidebar {
+  background: linear-gradient(180deg, #0F4C81 0%, #006DAD 50%, #0A6BAA 100%);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+}
+aside#sidebar nav { font-size: 13px; }
+aside#sidebar nav a,
+aside#sidebar nav button {
+  border-left: 3px solid transparent;
+  transition: all var(--transition-fast);
+  border-radius: 0;
+}
+aside#sidebar nav a.bg-white\/15,
+aside#sidebar nav .active {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-left-color: #FFFFFF;
+  color: #FFFFFF !important;
+  font-weight: 600;
+}
+aside#sidebar nav a:hover,
+aside#sidebar nav button:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #FFFFFF;
+}
+aside#sidebar .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ========================================================================
+ * 顶部 Header
+ * ======================================================================== */
+
+header.h-14 {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  height: 56px;
+}
+header.h-14 .text-gray-500 { color: var(--color-text-muted); }
+header.h-14 .text-gray-800 { color: var(--color-text-primary); font-weight: 600; }
+header.h-14 a:hover { color: var(--color-primary); }
+
+/* ========================================================================
+ * 卡片 Card
+ * ======================================================================== */
+
+main {
+  background-color: var(--color-bg-page);
+}
+
+main .bg-white {
+  background: var(--color-bg-card);
+}
+
+.bg-white.rounded-xl,
+.bg-white.rounded-lg,
+.bg-white.rounded-2xl {
+  border: 1px solid #ECEEF2;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal);
+}
+.bg-white.rounded-xl:hover,
+.bg-white.rounded-lg:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* 移除原过深 border-gray-100 替换为更轻 */
+.border-gray-100 { border-color: #ECEEF2 !important; }
+.border-gray-200 { border-color: var(--color-border) !important; }
+
+/* ========================================================================
+ * 按钮 Button - 主 / 副 / 文字
+ * ======================================================================== */
+
+/* Primary Button */
+.btn-primary,
+button.bg-primary,
+a.bg-primary {
+  background: var(--color-primary) !important;
+  color: #FFFFFF !important;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: background var(--transition-fast);
+}
+button.bg-primary:hover,
+a.bg-primary:hover,
+.btn-primary:hover {
+  background: var(--color-primary-dark) !important;
+}
+
+/* Secondary Button (描边) */
+.btn-secondary {
+  background: #FFFFFF;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+.btn-secondary:hover {
+  background: var(--color-primary-light);
+}
+
+/* ========================================================================
+ * 输入框 / 选择器
+ * ======================================================================== */
+
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select, textarea {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  background: #FFFFFF;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(48, 135, 204, 0.12);
+}
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+/* ========================================================================
+ * 表格 Table - 学工系统标准样式
+ * ======================================================================== */
+
+table { width: 100%; border-collapse: separate; border-spacing: 0; }
+table thead {
+  background: var(--table-header-bg);
+}
+table thead th {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: left;
+  border-bottom: 1px solid var(--color-primary-border);
+}
+table tbody td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid #ECEEF2;
+}
+table tbody tr:hover {
+  background: rgba(48, 135, 204, 0.04);
+}
+table tbody tr:last-child td { border-bottom: none; }
+
+/* ========================================================================
+ * 标签 Tag / Badge - 状态语义色
+ * ======================================================================== */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+  border: 1px solid transparent;
+}
+
+.tag-success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+}
+.tag-warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border-color: var(--color-warning-border);
+}
+.tag-danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+.tag-info {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+  border-color: var(--color-info-border);
+}
+.tag-default {
+  background: var(--color-bg-disabled);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+/* 兼容老的 bg-orange/red/green 标签：自动收紧字号、增加圆角 */
+[class*="bg-orange-100"],
+[class*="bg-yellow-100"] {
+  --tw-bg: var(--color-warning-bg);
+}
+
+/* ========================================================================
+ * 颜色覆盖 - 把 Tailwind 默认色映射到设计体系
+ * ======================================================================== */
+
+.text-primary       { color: var(--color-primary) !important; }
+.bg-primary         { background-color: var(--color-primary) !important; }
+.border-primary     { border-color: var(--color-primary) !important; }
+.text-primary-light { color: var(--color-primary-light) !important; }
+.bg-primary-light   { background-color: var(--color-primary-light) !important; }
+
+/* 等级色 (level1/2/3) */
+.text-level1 { color: var(--color-primary) !important; }
+.bg-level1   { background-color: var(--color-primary) !important; }
+.text-level2 { color: var(--color-warning) !important; }
+.bg-level2   { background-color: var(--color-warning) !important; }
+.text-level3 { color: var(--color-danger) !important; }
+.bg-level3   { background-color: var(--color-danger) !important; }
+
+/* ========================================================================
+ * 进度条
+ * ======================================================================== */
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: #F1F2F3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 10px;
+  transition: width var(--transition-slow);
+}
+.progress-fill.success { background: var(--color-success); }
+.progress-fill.warning { background: var(--color-warning); }
+.progress-fill.danger  { background: var(--color-danger); }
+
+/* ========================================================================
+ * 移动端容器 - iPhone 14 Pro / 375px
+ * ======================================================================== */
+
+.phone-frame {
+  width: 375px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  min-height: 100vh;
+  position: relative;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.06);
+}
+
+/* 移动端底部 TabBar 主题色统一 */
+.tab-bar-active { color: var(--color-primary) !important; }
+
+/* ========================================================================
+ * 工具类
+ * ======================================================================== */
+
+.shadow-card { box-shadow: var(--shadow-sm); }
+.shadow-card-md { box-shadow: var(--shadow-md); }
+.shadow-card-lg { box-shadow: var(--shadow-lg); }
+
+.divider {
+  border-top: 1px solid #ECEEF2;
+  margin: var(--spacing-lg) 0;
+}
+
+/* 焦点态可见性 (无障碍) */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* 动效缩减偏好 */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ========================================================================
+ * 知行护航工程 · 品牌组件 (1+4+N)
+ * ======================================================================== */
+
+/* === 4 大护航主题色 (用于品牌点缀, 不替换主题色) === */
+:root {
+  --hh-behavior: #F29100;   /* 行为护航 · 归巢行动 (温暖橙) */
+  --hh-academic: #1BB975;   /* 学业护航 · 登高计划 (希望绿) */
+  --hh-mental:   #7C3AED;   /* 心理护航 · 晨曦计划 (晨曦紫) */
+  --hh-economy:  #DF2027;   /* 经济护航 · 春雨行动 (春雨红) */
+}
+
+/* 品牌色块 - 行为护航 (橙) */
+.hh-behavior-bg   { background: linear-gradient(135deg,#FFF5E5 0%,#FFEDD0 100%); }
+.hh-behavior-text { color: var(--hh-behavior); }
+.hh-behavior-border{ border-color: #FFE0B3; }
+/* 学业护航 (绿) */
+.hh-academic-bg   { background: linear-gradient(135deg,#E8FCF4 0%,#D1F7E6 100%); }
+.hh-academic-text { color: var(--hh-academic); }
+.hh-academic-border{ border-color: #A7F3D0; }
+/* 心理护航 (紫) */
+.hh-mental-bg    { background: linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%); }
+.hh-mental-text  { color: var(--hh-mental); }
+.hh-mental-border{ border-color: #DDD6FE; }
+/* 经济护航 (红) */
+.hh-economy-bg   { background: linear-gradient(135deg,#FCE8EA 0%,#FBD5D9 100%); }
+.hh-economy-text { color: var(--hh-economy); }
+.hh-economy-border{ border-color: #F6BCBE; }
+
+/* === 知行护航 主品牌头条 === */
+.zhxh-hero {
+  background: linear-gradient(120deg, #0F4C81 0%, #006DAD 35%, #3087CC 70%, #5BA8DE 100%);
+  color: #FFFFFF;
+  border-radius: 16px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 76, 129, 0.18);
+}
+.zhxh-hero::before {
+  content: '';
+  position: absolute; right: -80px; top: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.zhxh-hero h1 {
+  font-size: 22px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px;
+}
+.zhxh-hero .slogan {
+  font-size: 13px; letter-spacing: 4px; opacity: 0.92; font-weight: 500;
+}
+.zhxh-hero .slogan-en {
+  font-size: 11px; letter-spacing: 1.2px; opacity: 0.7; margin-top: 2px;
+  font-style: italic;
+}
+
+/* === 模块品牌 Hero (行为/学业/心理/经济护航) === */
+.campaign-hero {
+  border-radius: 12px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.campaign-hero .icon-pill {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(4px);
+}
+.campaign-hero .title {
+  font-size: 18px; font-weight: 700; line-height: 1.3;
+}
+.campaign-hero .subtitle {
+  font-size: 12px; opacity: 0.78; margin-top: 2px;
+}
+.campaign-hero .quote {
+  font-size: 13px; line-height: 1.55; margin-top: 8px; opacity: 0.85;
+}
+
+/* === 行动 Tag (春雨/晨曦/登高/归巢) === */
+.campaign-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 10px; border-radius: 10px;
+  font-size: 11px; font-weight: 600;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+/* === 鹿小航 IP 容器 === */
+.mascot-card {
+  background: linear-gradient(135deg, #E3F1F9 0%, #D6EAF9 100%);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid #BADEF3;
+}
+.mascot-svg {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(48,135,204,0.12);
+}
+
+/* === 1+4+N 体系徽章 === */
+.arch-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+}
+
+/* === 域名徽章 === */
+.domain-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 10px;
+  background: rgba(0, 109, 173, 0.10);
+  color: var(--color-primary-dark);
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* 让侧边栏 logo 区域更具品牌感 */
+aside#sidebar .brand-block {
+  padding: 12px 16px 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+aside#sidebar .brand-block .logo {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.20);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+aside#sidebar .brand-block .logo img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+aside#sidebar .brand-block .text-block .name {
+  color: #FFFFFF; font-weight: 700; font-size: 14px; letter-spacing: 1px;
+}
+aside#sidebar .brand-block .text-block .sub {
+  color: rgba(255,255,255,0.65); font-size: 10px; letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* === 工程 footer 标语 === */
+.footer-slogan {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  padding: 16px 0;
+}
+.footer-slogan .main {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  letter-spacing: 4px;
+}
+.footer-slogan .en {
+  font-style: italic; opacity: 0.7; letter-spacing: 1px;
+}

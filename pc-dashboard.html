@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角色驾驶舱 - 中南大学知行护航工程</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3087CC','primary-light':'#E3F1F9','primary-dark':'#006DAD',brand:'#DF2027',level1:'#3087CC',level2:'#F29100',level3:'#DF2027',success:'#1BB975',warning:'#F29100',danger:'#DF2027',ai:'#7C3AED','ai-light':'#A78BFA',wechat:'#07C160'},fontFamily:{sans:['OPPOSans','-apple-system','PingFang SC','Microsoft YaHei','sans-serif']}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/cn-fontsource-oppo-sans-3@1.0.5/index.min.css" rel="stylesheet">
+<link rel="stylesheet" href="design-system.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  .role-tab{color:#64748b;background:#f1f5f9;transition:all .2s;border:1px solid transparent;display:inline-flex;align-items:center;}
+  .role-tab:hover{background:#e2e8f0;color:#1e293b;}
+  .role-tab.active{background:linear-gradient(135deg,#0F4C81,#3087CC);color:#fff;border-color:#0F4C81;box-shadow:0 2px 8px rgba(15,76,129,.3);}
+  .kpi-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 1px 2px rgba(0,0,0,.04);border:1px solid #f3f4f6;transition:all .2s;}
+  .kpi-card:hover{box-shadow:0 4px 12px rgba(48,135,204,.08);transform:translateY(-1px);}
+  .panel{background:#fff;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);border:1px solid #f3f4f6;}
+  .role-section{display:none;}
+  .role-section.active{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .stat-trend-up{color:#DF2027;}
+  .stat-trend-down{color:#1BB975;}
+  .stat-trend-flat{color:#9096A2;}
+</style>
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside id="sidebar" class="w-60 bg-primary flex-shrink-0 flex flex-col transition-all duration-300">
+  <div class="brand-block border-b border-white/10">
+    <div class="logo"><img src="assets/ip-mascot.png" alt="鹿小航" class="w-9 h-9 object-contain drop-shadow"></div>
+    <div class="text-block sidebar-text">
+      <div class="name">知行护航工程</div>
+      <div class="sub">CSU · Zhi-Xing Navigation</div>
+    </div>
+  </div>
+  <nav class="flex-1 py-2 overflow-y-auto text-sm">
+    <a href="pc-dashboard.html" class="flex items-center px-4 py-2 text-white bg-white/15 transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg><span class="sidebar-text">角色驾驶舱</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">预警管理</div>
+    <a href="pc-alerts.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg><span class="sidebar-text">预警清单</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-blue-200/60 font-semibold uppercase tracking-wider">数据分析</div>
+    <a href="pc-late-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">行为数据分析</span></a>
+    <a href="pc-study-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">学业数据分析</span></a>
+    <a href="pc-addict-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">心理数据分析</span></a>
+    <a href="pc-consume-analysis.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg><span class="sidebar-text">经济数据分析</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-student.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg><span class="sidebar-text">学生画像</span></a>
+    <a href="pc-rules.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg><span class="sidebar-text">预警规则</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <div class="px-4 py-1.5 text-xs text-purple-300/80 font-semibold uppercase tracking-wider flex items-center"><svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20 9l-5 4.87L16.18 21 12 17.77 7.82 21 9 13.87 4 9l5.91-.74L12 2z"/></svg>AI 助手（DeepSeek）</div>
+    <a href="pc-ai-copilot.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg><span class="sidebar-text">AI 智能助手</span></a>
+    <a href="pc-ai-report.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg><span class="sidebar-text">智能报告生成</span></a>
+    <div class="border-t border-white/10 my-1.5 mx-4"></div>
+    <a href="pc-data.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg><span class="sidebar-text">数据治理</span></a>
+    <a href="pc-system.html" class="flex items-center px-4 py-2 text-blue-200 hover:bg-white/10 hover:text-white transition"><svg class="w-4 h-4 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sidebar-text">系统管理</span></a>
+  </nav>
+</aside>
+
+<!-- Main -->
+<div class="flex-1 flex flex-col overflow-hidden">
+  <!-- Top Bar -->
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+    <div class="flex items-center text-sm text-gray-500">
+      <a href="index.html" class="hover:text-primary">首页</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-800 font-medium">角色驾驶舱</span>
+      <span class="ml-3 hidden md:inline-flex items-center text-[11px] text-primary bg-primary-light px-2 py-0.5 rounded">知行合一　数智护航</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="text-sm text-gray-500">2026-04-15 周三</span>
+      <div class="relative">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span class="absolute -top-1 -right-1 w-4 h-4 bg-level3 text-white text-xs rounded-full flex items-center justify-center">5</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">张</div>
+        <span class="text-sm text-gray-700">张老师</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="flex-1 overflow-y-auto p-6">
+    <!-- 角色切换 Tab -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-5">
+      <div class="px-5 py-3 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-xs text-gray-500 mr-3">视角切换：</span>
+          <button class="role-tab active px-4 py-2 rounded-lg text-xs font-medium" data-role="leader">
+            <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18"/></svg>
+            校领导 / 学工部 · 全局视角
+          </button>
+          <button class="role-tab px-4 py-2 rounded-lg text-xs font-medium" data-role="college">
+            <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814"/></svg>
+            学院 · 管理督导
+          </button>
+          <button class="role-tab px-4 py-2 rounded-lg text-xs font-medium" data-role="counselor">
+            <svg class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            辅导员 · 个人预警
+          </button>
+        </div>
+        <div class="text-xs text-gray-400" id="roleHint">全校四大护航预警总览 · 学院反馈率排名 · 高风险学生清单</div>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- 视角一：校领导 · 全局战略                       -->
+    <!-- ============================================= -->
+    <div id="view-leader" class="role-section active">
+      <!-- 四大护航 KPI + 多重预警 -->
+      <div class="grid grid-cols-5 gap-4 mb-5">
+        <a href="pc-alerts.html" class="kpi-card block">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-gray-500 text-sm">行为护航预警</span>
+              <div class="text-[11px] hh-behavior-text font-semibold mt-0.5">归巢行动</div>
+            </div>
+            <span class="w-9 h-9 hh-behavior-bg rounded-lg flex items-center justify-center"><svg class="w-4 h-4" style="color:var(--hh-behavior);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+          </div>
+          <div class="text-3xl font-bold text-gray-900">6,701</div>
+          <div class="flex items-center mt-2 text-sm"><span class="stat-trend-up mr-1">↑ 12.3%</span><span class="text-gray-400">较上月</span></div>
+        </a>
+        <a href="pc-alerts.html" class="kpi-card block">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-gray-500 text-sm">学业护航预警</span>
+              <div class="text-[11px] hh-academic-text font-semibold mt-0.5">登高计划</div>
+            </div>
+            <span class="w-9 h-9 hh-academic-bg rounded-lg flex items-center justify-center"><svg class="w-4 h-4" style="color:var(--hh-academic);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg></span>
+          </div>
+          <div class="text-3xl font-bold text-gray-900">1,892</div>
+          <div class="flex items-center mt-2 text-sm"><span class="stat-trend-down mr-1">↓ 5.1%</span><span class="text-gray-400">较上月</span></div>
+        </a>
+        <a href="pc-alerts.html" class="kpi-card block">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-gray-500 text-sm">心理护航预警</span>
+              <div class="text-[11px] hh-mental-text font-semibold mt-0.5">晨曦计划</div>
+            </div>
+            <span class="w-9 h-9 hh-mental-bg rounded-lg flex items-center justify-center"><svg class="w-4 h-4" style="color:var(--hh-mental);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg></span>
+          </div>
+          <div class="text-3xl font-bold text-gray-900">238</div>
+          <div class="flex items-center mt-2 text-sm"><span class="stat-trend-up mr-1">↑ 3.7%</span><span class="text-gray-400">较上月</span></div>
+        </a>
+        <a href="pc-alerts.html" class="kpi-card block">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-gray-500 text-sm">经济护航预警</span>
+              <div class="text-[11px] hh-economy-text font-semibold mt-0.5">春雨行动</div>
+            </div>
+            <span class="w-9 h-9 hh-economy-bg rounded-lg flex items-center justify-center"><svg class="w-4 h-4" style="color:var(--hh-economy);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375"/></svg></span>
+          </div>
+          <div class="text-3xl font-bold text-gray-900">54</div>
+          <div class="flex items-center mt-2 text-sm"><span class="stat-trend-flat mr-1">→ 0%</span><span class="text-gray-400">较上月</span></div>
+        </a>
+        <a href="pc-alerts.html?multi=1" class="kpi-card block" style="background:linear-gradient(135deg,#FFF5F5 0%,#FFFFFF 60%);border-color:#FECACA;">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-gray-500 text-sm">多重预警</span>
+              <div class="text-[11px] font-semibold mt-0.5" style="color:#DF2027;">跨主题叠加 · 重点关注</div>
+            </div>
+            <span class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:#FEE2E2;"><svg class="w-4 h-4" style="color:#DF2027;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></span>
+          </div>
+          <div class="text-3xl font-bold text-gray-900">126</div>
+          <div class="flex items-center mt-2 text-sm flex-wrap gap-1">
+            <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#FEF3C7;color:#B45309;">行为+学业 58</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#EDE9FE;color:#6D28D9;">行为+心理 32</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#FEE2E2;color:#B91C1C;">三主题+ 19</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- 趋势 + 等级分布 -->
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="col-span-2 panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">30 天预警触发趋势</h3>
+            <div class="flex space-x-2 text-xs">
+              <button class="px-3 py-1 bg-primary text-white rounded">全部</button>
+              <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">行为</button>
+              <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">学业</button>
+              <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">心理</button>
+              <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">经济</button>
+            </div>
+          </div>
+          <div id="trendChart" style="height:280px"></div>
+        </div>
+        <div class="panel p-5">
+          <h3 class="font-semibold text-gray-800 mb-4">预警等级分布</h3>
+          <div id="levelChart" style="height:280px"></div>
+        </div>
+      </div>
+
+      <!-- 学院反馈率 + 反馈时效 -->
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">学院预警反馈率排名 TOP10</h3>
+            <span class="text-xs text-gray-400">本月</span>
+          </div>
+          <div id="collegeRank" style="height:320px"></div>
+        </div>
+        <div class="panel p-5">
+          <h3 class="font-semibold text-gray-800 mb-4">反馈时效分析</h3>
+          <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="text-center p-3 bg-green-50 rounded-lg"><div class="text-2xl font-bold text-green-600">68%</div><div class="text-xs text-gray-500 mt-1">24h 内反馈</div></div>
+            <div class="text-center p-3 bg-yellow-50 rounded-lg"><div class="text-2xl font-bold text-yellow-600">22%</div><div class="text-xs text-gray-500 mt-1">24-48h 反馈</div></div>
+            <div class="text-center p-3 bg-red-50 rounded-lg"><div class="text-2xl font-bold text-red-500">10%</div><div class="text-xs text-gray-500 mt-1">超 48h / 未反馈</div></div>
+          </div>
+          <div id="timelyChart" style="height:200px"></div>
+        </div>
+      </div>
+
+      <!-- 业务运营 KPI -->
+      <div class="grid grid-cols-5 gap-4 mb-5">
+        <div class="kpi-card"><div class="text-xs text-gray-500">今日新增预警</div><div class="text-2xl font-bold text-gray-900 mt-1">287</div><div class="text-[11px] text-level3 mt-1">↑ 较昨日 +8.6%</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">当前待反馈</div><div class="text-2xl font-bold text-level2 mt-1">142</div><div class="text-[11px] text-gray-400 mt-1">已派至辅导员</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">本月反馈率</div><div class="text-2xl font-bold text-green-600 mt-1">87%</div><div class="text-[11px] text-gray-400 mt-1">目标 90%</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">系统误报率</div><div class="text-2xl font-bold text-primary mt-1">6.2%</div><div class="text-[11px] text-green-500 mt-1">↓ 较上月 -1.3%</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">高风险学生</div><div class="text-2xl font-bold text-level3 mt-1">48</div><div class="text-[11px] text-gray-400 mt-1">需重点关注</div></div>
+      </div>
+
+      <!-- 各学院预警总览 + 预警类型分布 -->
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="col-span-2 panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">各学院预警总览</h3>
+            <span class="text-xs text-gray-400">最近 30 天</span>
+          </div>
+          <div id="deptCollegeChart" style="height:300px"></div>
+        </div>
+        <div class="panel p-5">
+          <h3 class="font-semibold text-gray-800 mb-4">预警类型分布</h3>
+          <div id="deptTypeChart" style="height:300px"></div>
+        </div>
+      </div>
+
+      <!-- 学生按性别统计（NEW） + 辅导员反馈率 TOP10 -->
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-gray-800">学生按性别统计</h3>
+            <span class="text-xs text-gray-400">在校生 / 预警学生</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="text-center p-3 rounded-lg" style="background:#EFF6FF;">
+              <div class="text-xs text-gray-500">男生</div>
+              <div class="text-2xl font-bold mt-1" style="color:#2563EB;">13,420</div>
+              <div class="text-[11px] text-gray-400 mt-0.5">占比 58.6%</div>
+            </div>
+            <div class="text-center p-3 rounded-lg" style="background:#FDF2F8;">
+              <div class="text-xs text-gray-500">女生</div>
+              <div class="text-2xl font-bold mt-1" style="color:#DB2777;">9,490</div>
+              <div class="text-[11px] text-gray-400 mt-0.5">占比 41.4%</div>
+            </div>
+          </div>
+          <div id="genderChart" style="height:200px"></div>
+        </div>
+        <div class="col-span-2 panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">辅导员反馈率排名 TOP10</h3>
+            <a href="pc-alerts.html" class="text-xs text-primary hover:underline">查看全部 →</a>
+          </div>
+          <div id="deptFeedbackRank" style="height:300px"></div>
+        </div>
+      </div>
+
+      <!-- 跨学院高风险 + 实时动态 -->
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">跨学院高风险学生</h3>
+            <span class="text-xs px-2 py-0.5 bg-red-100 text-red-500 rounded-full">48 人</span>
+          </div>
+          <div class="space-y-2.5 max-h-[420px] overflow-y-auto" id="deptRiskList"></div>
+        </div>
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">全校实时动态</h3>
+            <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span></span>
+          </div>
+          <div class="grid grid-cols-1 gap-2.5 max-h-[420px] overflow-y-auto" id="leaderFeed"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- 视角三：学院 · 管理督导                         -->
+    <!-- ============================================= -->
+    <div id="view-college" class="role-section">
+      <div class="panel p-4 mb-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-sm text-gray-500">当前学院：</span>
+          <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary">
+            <option>计算机学院</option>
+            <option>数学学院</option>
+            <option>物理学院</option>
+            <option>化学学院</option>
+            <option>材料学院</option>
+            <option>文学院</option>
+          </select>
+          <span class="text-xs text-gray-400">1,286 名学生 · 23 名辅导员</span>
+        </div>
+        <span class="text-xs text-gray-400">数据更新于 2026-04-15 09:30</span>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4 mb-5">
+        <div class="kpi-card"><div class="text-xs text-gray-500">本月预警总数</div><div class="text-2xl font-bold text-gray-900 mt-1">486</div><div class="text-[11px] text-level3 mt-1">↑ 较上月 +6.1%</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">三级预警</div><div class="text-2xl font-bold text-level3 mt-1">27</div><div class="text-[11px] text-gray-400 mt-1">需紧急关注</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">本月反馈率</div><div class="text-2xl font-bold text-green-600 mt-1">91%</div><div class="text-[11px] text-green-500 mt-1">高于全校 +4pt</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">重点关注学生</div><div class="text-2xl font-bold text-level2 mt-1">15</div><div class="text-[11px] text-gray-400 mt-1">连续预警 ≥ 5 次</div></div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 mb-5">
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">辅导员反馈率</h3>
+            <span class="text-xs text-gray-400">本月</span>
+          </div>
+          <div id="counselorRank" style="height:300px"></div>
+        </div>
+      </div>
+
+      <div class="panel p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-gray-800">本学院重点关注学生</h3>
+          <a href="pc-student.html" class="text-xs text-primary hover:underline">查看全部 →</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs">
+              <tr>
+                <th class="text-left px-3 py-2 font-medium">学生</th>
+                <th class="text-left px-3 py-2 font-medium">学号</th>
+                <th class="text-left px-3 py-2 font-medium">专业/年级</th>
+                <th class="text-left px-3 py-2 font-medium">预警类型</th>
+                <th class="text-left px-3 py-2 font-medium">累计预警</th>
+                <th class="text-left px-3 py-2 font-medium">辅导员</th>
+                <th class="text-left px-3 py-2 font-medium">操作</th>
+              </tr>
+            </thead>
+            <tbody id="collegeStuList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- 视角四：辅导员 · 个人预警                       -->
+    <!-- ============================================= -->
+    <div id="view-counselor" class="role-section">
+      <div class="grid grid-cols-4 gap-4 mb-5">
+        <div class="kpi-card"><div class="text-xs text-gray-500">我的学生</div><div class="text-2xl font-bold text-gray-900 mt-1">186</div><div class="text-[11px] text-gray-400 mt-1">覆盖 6 个班级</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">待反馈预警</div><div class="text-2xl font-bold text-level3 mt-1">12</div><div class="text-[11px] text-level3 mt-1">其中 3 条已超 24h</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">本月反馈率</div><div class="text-2xl font-bold text-green-600 mt-1">94%</div><div class="text-[11px] text-gray-400 mt-1">目标 90%</div></div>
+        <div class="kpi-card"><div class="text-xs text-gray-500">重点关注学生</div><div class="text-2xl font-bold text-level2 mt-1">7</div><div class="text-[11px] text-gray-400 mt-1">我已标记</div></div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <!-- 我的待反馈 -->
+        <div class="col-span-2 panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800">我的待反馈预警</h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">建议使用手机端反馈</span>
+              <a href="pc-alerts.html" class="text-xs text-primary hover:underline">查看全部 →</a>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500 text-xs">
+                <tr>
+                  <th class="text-left px-3 py-2 font-medium">学生</th>
+                  <th class="text-left px-3 py-2 font-medium">预警类型</th>
+                  <th class="text-left px-3 py-2 font-medium">等级</th>
+                  <th class="text-left px-3 py-2 font-medium">预警时间</th>
+                  <th class="text-left px-3 py-2 font-medium">详情</th>
+                </tr>
+              </thead>
+              <tbody id="myAlertList"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 我的学生预警分布 -->
+        <div class="panel p-5">
+          <h3 class="font-semibold text-gray-800 mb-4">我的学生预警分布</h3>
+          <div id="myTypeChart" style="height:260px"></div>
+        </div>
+      </div>
+
+      <!-- 我的重点关注学生 -->
+      <div class="panel p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-gray-800">我的重点关注学生</h3>
+          <a href="pc-student.html" class="text-xs text-primary hover:underline">查看全部 →</a>
+        </div>
+        <div class="grid grid-cols-4 gap-3" id="myFocusList"></div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+const roleHints={
+  leader:'全校四大护航总览 · 业务运营 · 学院反馈排名 · 学生性别分布 · 高风险清单',
+  college:'本学院预警热力 · 辅导员反馈率 · 重点关注学生',
+  counselor:'我的待反馈预警 · 我的学生分布 · 我的重点学生'
+};
+const charts={};
+const loaded={leader:false,college:false,counselor:false};
+
+function switchRole(role){
+  document.querySelectorAll('.role-tab').forEach(b=>b.classList.toggle('active',b.dataset.role===role));
+  document.querySelectorAll('.role-section').forEach(s=>s.classList.toggle('active',s.id==='view-'+role));
+  document.getElementById('roleHint').textContent=roleHints[role];
+  if(!loaded[role]){initFn[role]();loaded[role]=true;}
+}
+
+// ============== 校领导 / 学工部（合并） ==============
+function initLeader(){
+  // 30 天趋势
+  const trend=echarts.init(document.getElementById('trendChart'));
+  charts.trend=trend;
+  const days=Array.from({length:30},(_,i)=>`${3+Math.floor((16+i)/31)}/${((16+i)%31)||31}`);
+  trend.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{data:['行为','学业','心理','经济'],bottom:0,textStyle:{fontSize:11}},
+    grid:{top:10,right:20,bottom:35,left:50},
+    xAxis:{type:'category',data:days,axisLabel:{fontSize:10,rotate:45}},
+    yAxis:{type:'value',axisLabel:{fontSize:10}},
+    series:[
+      {name:'行为',type:'line',smooth:true,data:days.map(()=>Math.floor(Math.random()*200+150)),lineStyle:{color:'#F29100'},itemStyle:{color:'#F29100'}},
+      {name:'学业',type:'line',smooth:true,data:days.map(()=>Math.floor(Math.random()*80+40)),lineStyle:{color:'#1BB975'},itemStyle:{color:'#1BB975'}},
+      {name:'心理',type:'line',smooth:true,data:days.map(()=>Math.floor(Math.random()*15+5)),lineStyle:{color:'#7C3AED'},itemStyle:{color:'#7C3AED'}},
+      {name:'经济',type:'line',smooth:true,data:days.map(()=>Math.floor(Math.random()*5+1)),lineStyle:{color:'#DF2027'},itemStyle:{color:'#DF2027'}}
+    ]
+  });
+  // 等级分布
+  const level=echarts.init(document.getElementById('levelChart'));
+  charts.level=level;
+  level.setOption({
+    tooltip:{trigger:'item'},
+    series:[{
+      type:'pie',radius:['45%','70%'],center:['50%','50%'],
+      label:{formatter:'{b}\n{d}%',fontSize:11},
+      data:[
+        {value:5842,name:'一级（蓝色）',itemStyle:{color:'#3087CC'}},
+        {value:2610,name:'二级（橙色）',itemStyle:{color:'#F29100'}},
+        {value:433,name:'三级（红色）',itemStyle:{color:'#DF2027'}}
+      ]
+    }]
+  });
+  // 学院反馈率
+  const rank=echarts.init(document.getElementById('collegeRank'));
+  charts.collegeRank=rank;
+  const cNames=['计算机学院','数学学院','物理学院','化学学院','材料学院','文学院','外国语学院','马克思学院','商学院','公共管理学院'];
+  const cVals=[98,95,93,91,88,85,82,78,75,70];
+  rank.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{top:5,right:60,bottom:5,left:100,containLabel:false},
+    xAxis:{type:'value',max:100,show:false},
+    yAxis:{type:'category',data:cNames.slice().reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{fontSize:12}},
+    series:[{
+      type:'bar',data:cVals.slice().reverse(),barWidth:16,
+      label:{show:true,position:'right',formatter:'{c}%',fontSize:11},
+      itemStyle:{color:function(p){return p.data>=90?'#1BB975':p.data>=80?'#3087CC':'#DF2027'},borderRadius:[0,8,8,0]}
+    }]
+  });
+  // 反馈时效
+  const timely=echarts.init(document.getElementById('timelyChart'));
+  charts.timely=timely;
+  timely.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{top:10,right:20,bottom:25,left:40},
+    xAxis:{type:'category',data:['第1周','第2周','第3周','第4周','本周'],axisLabel:{fontSize:10}},
+    yAxis:{type:'value',max:100,axisLabel:{formatter:'{value}%',fontSize:10}},
+    series:[
+      {name:'24h内',type:'bar',stack:'a',data:[62,65,68,70,68],itemStyle:{color:'#1BB975'},barWidth:24},
+      {name:'24-48h',type:'bar',stack:'a',data:[25,23,22,20,22],itemStyle:{color:'#F29100'}},
+      {name:'超48h',type:'bar',stack:'a',data:[13,12,10,10,10],itemStyle:{color:'#DF2027'}}
+    ]
+  });
+  // 实时动态
+  const feeds=[
+    {time:'20:15',type:'warning',text:'张三（计算机学院）触发行为三级预警，已连续 15 天晚归'},
+    {time:'20:10',type:'feedback',text:'王老师反馈了 12 条行为预警，平均响应 1.2 小时'},
+    {time:'20:05',type:'warning',text:'李四（数学学院）消费骤降预警，近 7 日零消费'},
+    {time:'19:58',type:'system',text:'学业护航完成每日计算，新增 23 条预警'},
+    {time:'19:50',type:'feedback',text:'陈老师反馈了 5 条心理预警'},
+    {time:'19:45',type:'warning',text:'王五（物理学院）抑郁倾向预警，文本多次出现"撑不下去"'},
+    {time:'19:30',type:'escalation',text:'赵六未归预警升级为三级，已通知学院'},
+    {time:'19:20',type:'system',text:'门禁数据同步完成，新增 1,234 条记录'}
+  ];
+  const icons={warning:'🔔',feedback:'✅',system:'⚙️',escalation:'⚠️'};
+  const cls={warning:'border-l-orange-400 bg-orange-50/50',feedback:'border-l-green-400 bg-green-50/50',system:'border-l-blue-400 bg-blue-50/50',escalation:'border-l-red-400 bg-red-50/50'};
+  document.getElementById('leaderFeed').innerHTML=feeds.map(f=>`
+    <div class="pl-3 py-2 border-l-2 ${cls[f.type]} rounded-r-md">
+      <div class="flex items-center"><span class="mr-1">${icons[f.type]}</span><span class="text-xs text-gray-400">${f.time}</span></div>
+      <div class="text-sm text-gray-600 mt-0.5">${f.text}</div>
+    </div>
+  `).join('');
+
+  /* ===== 合并自原"学工部 · 业务运营"视角 ===== */
+  // 各学院预警总览
+  const cc=echarts.init(document.getElementById('deptCollegeChart'));
+  charts.deptCollege=cc;
+  const names=['计算机学院','数学学院','物理学院','化学学院','材料学院','文学院','外国语学院','马克思学院','商学院','公共管理学院'];
+  cc.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    legend:{data:['行为','学业','心理','经济'],bottom:0,textStyle:{fontSize:11}},
+    grid:{top:10,right:20,bottom:35,left:40},
+    xAxis:{type:'category',data:names,axisLabel:{fontSize:10,interval:0,rotate:30}},
+    yAxis:{type:'value',axisLabel:{fontSize:10}},
+    series:[
+      {name:'行为',type:'bar',stack:'a',data:[860,720,680,540,480,420,380,310,280,260],itemStyle:{color:'#F29100'}},
+      {name:'学业',type:'bar',stack:'a',data:[210,180,170,140,130,110,90,80,70,60],itemStyle:{color:'#1BB975'}},
+      {name:'心理',type:'bar',stack:'a',data:[28,25,22,18,15,14,12,10,9,8],itemStyle:{color:'#7C3AED'}},
+      {name:'经济',type:'bar',stack:'a',data:[6,5,5,4,4,3,3,2,2,2],itemStyle:{color:'#DF2027'}}
+    ]
+  });
+  // 预警类型
+  const tt=echarts.init(document.getElementById('deptTypeChart'));
+  charts.deptType=tt;
+  tt.setOption({
+    tooltip:{trigger:'item'},
+    series:[{
+      type:'pie',radius:['35%','65%'],roseType:'area',
+      label:{formatter:'{b}\n{d}%',fontSize:10},
+      data:[
+        {value:3214,name:'晚归频率',itemStyle:{color:'#F29100'}},
+        {value:1820,name:'连续晚归',itemStyle:{color:'#F5AA3F'}},
+        {value:980,name:'未归',itemStyle:{color:'#D97706'}},
+        {value:687,name:'夜不归宿',itemStyle:{color:'#7C2D12'}},
+        {value:1420,name:'成绩下滑',itemStyle:{color:'#1BB975'}},
+        {value:472,name:'挂科',itemStyle:{color:'#059669'}},
+        {value:238,name:'情绪异常',itemStyle:{color:'#7C3AED'}},
+        {value:54,name:'消费异常',itemStyle:{color:'#DF2027'}}
+      ]
+    }]
+  });
+  // 辅导员反馈率
+  const fr=echarts.init(document.getElementById('deptFeedbackRank'));
+  charts.deptFeedback=fr;
+  const tnames=['王老师','李老师','陈老师','刘老师','周老师','赵老师','黄老师','吴老师','林老师','郑老师'];
+  const tvals=[98,95,93,91,88,85,82,78,75,70];
+  fr.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{top:5,right:60,bottom:5,left:70,containLabel:false},
+    xAxis:{type:'value',max:100,show:false},
+    yAxis:{type:'category',data:tnames.slice().reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{fontSize:12}},
+    series:[{
+      type:'bar',data:tvals.slice().reverse(),barWidth:16,
+      label:{show:true,position:'right',formatter:'{c}%',fontSize:11},
+      itemStyle:{color:function(p){return p.data>=90?'#1BB975':p.data>=80?'#3087CC':'#DF2027'},borderRadius:[0,8,8,0]}
+    }]
+  });
+  // 学生按性别统计（NEW）—— 各预警主题中的男女分布
+  const gd=echarts.init(document.getElementById('genderChart'));
+  charts.gender=gd;
+  gd.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>p.map(x=>`${x.marker}${x.seriesName}：${x.value} 人`).join('<br/>')},
+    legend:{data:['男生','女生'],top:0,textStyle:{fontSize:11}},
+    grid:{top:30,right:10,bottom:20,left:50,containLabel:false},
+    xAxis:{type:'category',data:['行为','学业','心理','经济'],axisLabel:{fontSize:11}},
+    yAxis:{type:'value',axisLabel:{fontSize:10}},
+    series:[
+      {name:'男生',type:'bar',data:[4380,1180,82,28],itemStyle:{color:'#3087CC',borderRadius:[6,6,0,0]},barWidth:16,label:{show:true,position:'top',fontSize:10,color:'#3087CC'}},
+      {name:'女生',type:'bar',data:[2321,712,156,26],itemStyle:{color:'#DB2777',borderRadius:[6,6,0,0]},barWidth:16,label:{show:true,position:'top',fontSize:10,color:'#DB2777'}}
+    ]
+  });
+  // 跨学院高风险
+  const risks=[
+    {name:'张三',id:'2024010001',dept:'计算机学院',types:['行为·3','学业·2'],count:8,level:3},
+    {name:'李四',id:'2023020045',dept:'数学学院',types:['心理·3','行为·2'],count:7,level:3},
+    {name:'王五',id:'2024030078',dept:'物理学院',types:['学业·3','心理·2'],count:6,level:3},
+    {name:'赵六',id:'2023040112',dept:'化学学院',types:['行为·3'],count:5,level:2},
+    {name:'钱七',id:'2024050023',dept:'文学院',types:['经济·2','心理·2'],count:5,level:2},
+    {name:'孙八',id:'2024060034',dept:'材料学院',types:['行为·2','学业·2'],count:4,level:2},
+    {name:'周九',id:'2023070056',dept:'外国语学院',types:['心理·2'],count:4,level:2}
+  ];
+  const levelCls={3:'bg-red-100 text-level3',2:'bg-orange-100 text-orange-500',1:'bg-blue-100 text-level1'};
+  document.getElementById('deptRiskList').innerHTML=risks.map(r=>`
+    <div class="flex items-center justify-between p-2.5 rounded-lg hover:bg-gray-50 transition">
+      <div class="flex items-center flex-1 min-w-0">
+        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium text-gray-600 flex-shrink-0">${r.name[0]}</div>
+        <div class="ml-3 min-w-0 flex-1">
+          <div class="flex items-center gap-1.5"><span class="text-sm font-medium text-gray-800">${r.name}</span><span class="text-[10px] text-gray-400">${r.id}</span></div>
+          <div class="text-xs text-gray-400 mt-0.5 truncate">${r.dept} · ${r.types.join(' / ')}</div>
+        </div>
+      </div>
+      <div class="text-right ml-2 flex-shrink-0"><span class="text-xs px-2 py-0.5 rounded-full ${levelCls[r.level]}">累计 ${r.count}</span></div>
+    </div>
+  `).join('');
+}
+
+// ============== 学院 ==============
+function initCollege(){
+  // 辅导员反馈
+  const cr=echarts.init(document.getElementById('counselorRank'));
+  charts.counselorRank=cr;
+  const ns=['王老师','李老师','陈老师','刘老师','周老师','赵老师'];
+  const vs=[96,94,92,89,85,80];
+  cr.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{top:5,right:60,bottom:5,left:70,containLabel:false},
+    xAxis:{type:'value',max:100,show:false},
+    yAxis:{type:'category',data:ns.slice().reverse(),axisLabel:{fontSize:11}},
+    series:[{type:'bar',data:vs.slice().reverse(),barWidth:18,label:{show:true,position:'right',formatter:'{c}%',fontSize:11},itemStyle:{color:function(p){return p.data>=90?'#1BB975':'#3087CC'},borderRadius:[0,8,8,0]}}]
+  });
+  // 重点关注学生
+  const stu=[
+    {name:'张三',id:'2024010001',major:'软件工程 · 大二',type:'行为·连续晚归（3级）',count:15,c:'王老师'},
+    {name:'李四',id:'2024010023',major:'软件工程 · 大二',type:'学业·成绩下滑（2级）',count:8,c:'王老师'},
+    {name:'王五',id:'2024020015',major:'计算机科学 · 大二',type:'心理·情绪异常（3级）',count:6,c:'李老师'},
+    {name:'赵六',id:'2023010088',major:'软件工程 · 大三',type:'行为·未归（3级）',count:5,c:'王老师'},
+    {name:'钱七',id:'2023020043',major:'计算机科学 · 大三',type:'经济·消费骤降（2级）',count:4,c:'李老师'}
+  ];
+  document.getElementById('collegeStuList').innerHTML=stu.map(s=>`
+    <tr class="border-b border-gray-50 hover:bg-gray-50">
+      <td class="px-3 py-2.5"><div class="flex items-center"><div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium text-gray-600 mr-2">${s.name[0]}</div><span class="font-medium text-gray-800">${s.name}</span></div></td>
+      <td class="px-3 py-2.5 text-gray-500">${s.id}</td>
+      <td class="px-3 py-2.5 text-gray-500">${s.major}</td>
+      <td class="px-3 py-2.5 text-gray-700">${s.type}</td>
+      <td class="px-3 py-2.5"><span class="text-xs px-2 py-0.5 bg-orange-100 text-orange-500 rounded-full">${s.count} 次</span></td>
+      <td class="px-3 py-2.5 text-gray-500">${s.c}</td>
+      <td class="px-3 py-2.5"><a href="pc-student.html" class="text-primary text-xs hover:underline">查看画像</a></td>
+    </tr>
+  `).join('');
+}
+
+// ============== 辅导员 ==============
+function initCounselor(){
+  // 我的待反馈
+  const alerts=[
+    {name:'张三',id:'2024010001',type:'行为·未归',level:3,time:'今日 02:15',detail:'昨晚至今未归寝，已连续 2 天'},
+    {name:'李四',id:'2024010023',type:'学业·成绩下滑',level:2,time:'今日 08:30',detail:'近三次测验均不及格'},
+    {name:'王五',id:'2024020015',type:'心理·情绪异常',level:3,time:'昨日 22:18',detail:'BBS 发帖出现消极情绪关键词'},
+    {name:'赵六',id:'2023010088',type:'行为·连续晚归',level:2,time:'昨日 23:45',detail:'连续 6 天 23:00 后归寝'},
+    {name:'钱七',id:'2023020043',type:'经济·消费骤降',level:1,time:'前日 16:22',detail:'近 7 日餐费 < 50 元'}
+  ];
+  const lv={3:'bg-red-100 text-level3',2:'bg-orange-100 text-orange-500',1:'bg-blue-100 text-level1'};
+  const lvl={3:'三级',2:'二级',1:'一级'};
+  document.getElementById('myAlertList').innerHTML=alerts.map(a=>`
+    <tr class="border-b border-gray-50 hover:bg-gray-50">
+      <td class="px-3 py-2.5"><div class="flex items-center"><div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium text-gray-600 mr-2">${a.name[0]}</div><div><div class="text-sm font-medium text-gray-800">${a.name}</div><div class="text-[10px] text-gray-400">${a.id}</div></div></div></td>
+      <td class="px-3 py-2.5 text-gray-700">${a.type}</td>
+      <td class="px-3 py-2.5"><span class="text-xs px-2 py-0.5 rounded-full ${lv[a.level]}">${lvl[a.level]}</span></td>
+      <td class="px-3 py-2.5 text-gray-500 text-xs">${a.time}</td>
+      <td class="px-3 py-2.5 text-gray-500 text-xs max-w-xs truncate">${a.detail}</td>
+    </tr>
+  `).join('');
+  // 我的学生预警分布
+  const mt=echarts.init(document.getElementById('myTypeChart'));
+  charts.myType=mt;
+  mt.setOption({
+    tooltip:{trigger:'item'},
+    series:[{type:'pie',radius:['40%','70%'],label:{formatter:'{b}\n{c}',fontSize:10},data:[
+      {value:38,name:'行为',itemStyle:{color:'#F29100'}},
+      {value:14,name:'学业',itemStyle:{color:'#1BB975'}},
+      {value:5,name:'心理',itemStyle:{color:'#7C3AED'}},
+      {value:2,name:'经济',itemStyle:{color:'#DF2027'}}
+    ]}]
+  });
+  // 我的重点学生
+  const focus=[
+    {name:'张三',id:'2024010001',tag:'行为·持续异常',risk:3,count:15},
+    {name:'李四',id:'2024010023',tag:'学业·需辅导',risk:2,count:8},
+    {name:'王五',id:'2024020015',tag:'心理·需关怀',risk:3,count:6},
+    {name:'赵六',id:'2023010088',tag:'行为·未归',risk:3,count:5},
+    {name:'钱七',id:'2023020043',tag:'经济·关注',risk:2,count:4},
+    {name:'孙八',id:'2024060034',tag:'学业·补差',risk:1,count:3},
+    {name:'周九',id:'2023070056',tag:'行为·晚归',risk:1,count:2}
+  ];
+  const riskBg={3:'bg-red-50 border-red-200',2:'bg-orange-50 border-orange-200',1:'bg-blue-50 border-blue-200'};
+  const riskDot={3:'bg-red-500',2:'bg-orange-500',1:'bg-blue-500'};
+  document.getElementById('myFocusList').innerHTML=focus.map(f=>`
+    <a href="pc-student.html" class="block p-3 rounded-lg border ${riskBg[f.risk]} hover:shadow-sm transition">
+      <div class="flex items-center justify-between mb-1.5">
+        <div class="flex items-center"><div class="w-6 h-6 rounded-full ${riskDot[f.risk]} text-white flex items-center justify-center text-xs font-medium mr-2">${f.name[0]}</div><span class="text-sm font-medium text-gray-800">${f.name}</span></div>
+        <span class="text-xs text-gray-400">${f.count} 次</span>
+      </div>
+      <div class="text-[11px] text-gray-500">${f.id}</div>
+      <div class="text-[11px] text-gray-600 mt-1">${f.tag}</div>
+    </a>
+  `).join('');
+}
+
+const initFn={leader:initLeader,college:initCollege,counselor:initCounselor};
+document.querySelectorAll('.role-tab').forEach(btn=>btn.addEventListener('click',()=>switchRole(btn.dataset.role)));
+window.addEventListener('resize',()=>{Object.values(charts).forEach(c=>c&&c.resize());});
+initLeader();
+loaded.leader=true;
+</script>
+</body>
+</html>
